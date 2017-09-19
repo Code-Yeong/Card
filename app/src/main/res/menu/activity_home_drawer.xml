@@ -4,7 +4,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_taskManage"
-            android:icon="@drawable/icon_tasklist"
+            android:icon="@drawable/icon_tasks"
             android:title="任务管理" />
         <item
             android:id="@+id/nav_daily"
@@ -16,11 +16,11 @@
             android:title="备忘录" />
         <item
             android:id="@+id/nav_help"
-            android:icon="@drawable/icon_memo"
+            android:icon="@drawable/icon_help"
             android:title="使用帮助" />
         <item
             android:id="@+id/nav_about"
-            android:icon="@drawable/icon_memo"
+            android:icon="@drawable/icon_about"
             android:title="关于我们" />
     </group>
 
