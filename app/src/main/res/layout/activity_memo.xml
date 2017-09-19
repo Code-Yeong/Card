@@ -8,11 +8,6 @@
     android:fitsSystemWindows="true"
     tools:context=".view.MemoActivity">
 
-    <com.vector.com.card.utils.TriangleView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:background="#FF0000" />
-
     <com.vector.com.card.utils.MyRecyclerViewForMemo
         android:id="@+id/memo_recycler"
         android:layout_width="match_parent"
