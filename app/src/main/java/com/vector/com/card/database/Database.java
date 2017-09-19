@@ -29,6 +29,8 @@ public class Database extends SQLiteOpenHelper {
             + "status varchar(10),"
             + "content varchar(100),"
             + "userid varchar(20),"
+            + "starttime varchar(20),"
+            + "stoptime varchar(20),"
             + "time varchar(20)"
             + ")";
 

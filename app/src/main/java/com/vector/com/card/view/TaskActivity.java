@@ -18,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CalendarView;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -76,11 +78,15 @@ public class TaskActivity extends BaseActivity {
             }
 
             @Override
-            public void onClickLook(View view, long id) {
+            public void onClickLook(View view, long id, String startTime, String stopTime) {
+                int finishCount = 0;
                 View v = getLayoutInflater().inflate(R.layout.self_task_dialog, null);
                 ImageView iv_close = (ImageView) v.findViewById(R.id.self_task_dialog_close);
                 LinearLayout layoutContent = (LinearLayout) v.findViewById(R.id.self_task_dialog_content);
-                List<Detail> list = getDetails(id);
+                TextView tv_time = (TextView) v.findViewById(R.id.self_task_dialog_period);
+                TextView tv_finish = (TextView) v.findViewById(R.id.self_task_dialog_finish);
+                tv_time.setText(startTime + "---->" + (stopTime != null ? stopTime : "--"));
+                List<Detail> list = getDetails(id, startTime, stopTime);
                 for (int i = 0; i < list.size(); i++) {
                     DialogSingleItem dialogSingleItem = new DialogSingleItem(TaskActivity.this);
                     if (i == 0) {
@@ -93,6 +99,7 @@ public class TaskActivity extends BaseActivity {
                             dialogSingleItem.setTvStatus("已完成");
                             dialogSingleItem.setTvStatusColor(Color.BLACK);
                             dialogSingleItem.setTvTimeColor(Color.BLACK);
+                            finishCount++;
                         } else {
                             dialogSingleItem.setTvStatus("未完成");
                             dialogSingleItem.setTvTimeColor(Color.RED);
@@ -104,6 +111,7 @@ public class TaskActivity extends BaseActivity {
                             dialogSingleItem.setTvStatus("已完成");
                             dialogSingleItem.setTvStatusColor(Color.BLACK);
                             dialogSingleItem.setTvTimeColor(Color.BLACK);
+                            finishCount++;
                         } else {
                             dialogSingleItem.setTvStatus("未完成");
                             dialogSingleItem.setTvStatusColor(Color.RED);
@@ -125,6 +133,7 @@ public class TaskActivity extends BaseActivity {
                     }
                     layoutContent.addView(dialogSingleItem);
                 }
+                tv_finish.setText(finishCount + "次(共" + list.size() + "次)");
                 final Dialog dialog = new AlertDialog.Builder(TaskActivity.this).setView(v).show();
                 iv_close.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -145,6 +154,7 @@ public class TaskActivity extends BaseActivity {
                 final ImageView iv_close = (ImageView) v.findViewById(R.id.self_task_create_close);
                 final Button btn_submit = (Button) v.findViewById(R.id.self_task_create_submit);
                 final TextView tv_tip = (TextView) v.findViewById(R.id.self_task_create_tip);
+                final TextView tv_startTime = (TextView) v.findViewById(R.id.self_task_create_starttime);
                 final Dialog dialog = new AlertDialog.Builder(TaskActivity.this).setView(v).show();
                 iv_close.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -153,14 +163,48 @@ public class TaskActivity extends BaseActivity {
                     }
                 });
 
+                tv_startTime.setText(Utils.getCurrentDate());
+                tv_startTime.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LayoutInflater layoutInflater = getLayoutInflater();
+                        View v2 = layoutInflater.inflate(R.layout.self_date_picker, null);
+                        final Dialog dialog2 = new AlertDialog.Builder(TaskActivity.this).setView(v2).show();
+                        final ImageView iv_close = (ImageView) v2.findViewById(R.id.self_date_picker_close);
+                        final Button btn_submit = (Button) v2.findViewById(R.id.self_date_picker_submit);
+                        final CalendarView cv = (CalendarView) v2.findViewById(R.id.self_date_picker_picker);
+                        iv_close.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog2.dismiss();
+                            }
+                        });
+
+                        cv.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+                            @Override
+                            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+                                tv_startTime.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
+                            }
+                        });
+
+                        btn_submit.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog2.dismiss();
+                            }
+                        });
+                    }
+                });
+
                 btn_submit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         String content = et_content.getText().toString().trim();
+                        String startTime = tv_startTime.getText().toString().trim();
                         long id = getSharedPreferences("userInfo", Activity.MODE_PRIVATE).getLong("id", 0);
                         if (content.length() > 0) {
                             TaskDao taskDao = new TaskDao(TaskActivity.this);
-                            long result = taskDao.insert(new Task(String.valueOf(id), content));
+                            long result = taskDao.insert(new Task(String.valueOf(id), content, startTime));
                             if (result > 0) {
                                 et_content.setText("");
                                 recyclerViewAdapterForTask = new RecyclerViewAdapterForTask(getData());
@@ -207,8 +251,8 @@ public class TaskActivity extends BaseActivity {
         return taskDao.queryByUserId(getSharedPreferences("userInfo", Activity.MODE_PRIVATE).getLong("id", 0));
     }
 
-    public List<Detail> getDetails(long id) {
+    public List<Detail> getDetails(long id, String startTime, String stopTime) {
         DetailDao detailDao = new DetailDao(this);
-        return detailDao.queryByTaskId(id);
+        return detailDao.queryByTaskId(id, startTime, stopTime);
     }
 }

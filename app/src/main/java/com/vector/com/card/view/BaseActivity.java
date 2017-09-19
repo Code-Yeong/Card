@@ -1,9 +1,7 @@
 package com.vector.com.card.view;
 
 import android.app.Activity;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;

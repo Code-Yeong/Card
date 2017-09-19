@@ -36,7 +36,7 @@ public class MyRecyclerViewForTask extends RecyclerView {
 
         void onClickDelete(View view, long id);
 
-        void onClickLook(View view, long id);
+        void onClickLook(View view, long id,String startTime,String stopTime);
 
         void onClickAbort(View view, long id);
 
@@ -144,7 +144,7 @@ public class MyRecyclerViewForTask extends RecyclerView {
                             mScroller.startScroll(scrollX, 0, -scrollX, 0);
                         } else if (xUp > (windowWidth - maxLength) && xUp < (windowWidth - maxLength * 2 / 3)) {
                             if (listener != null) {
-                                listener.onClickLook(tv_look, ((RecyclerViewAdapterForTask) getAdapter()).getItemId(pos));
+                                listener.onClickLook(tv_look, ((RecyclerViewAdapterForTask) getAdapter()).getItemId(pos),((RecyclerViewAdapterForTask) getAdapter()).getItemStartTime(pos),((RecyclerViewAdapterForTask) getAdapter()).getItemStopTime(pos));
                             }
                         } else if (xUp > (windowWidth - maxLength * 2 / 3) && xUp < (windowWidth - maxLength / 3)) {
                             if (listener != null) {

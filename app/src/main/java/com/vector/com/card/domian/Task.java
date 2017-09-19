@@ -10,25 +10,31 @@ public class Task {
     private String user;
     private String content;
     private String status;
+    private String startTime;
+    private String stopTime;
     private String time;
 
-    public Task(String user, String content) {
+    public Task(String user, String content, String startTime) {
         this.user = user;
         this.content = content;
         this.status = "0";
+        this.startTime = startTime;
         this.time = Utils.getCurrentTime();
     }
 
     public Task(long id, String status) {
         this.id = id;
         this.status = status;
+        this.stopTime = Utils.getCurrentDate();
     }
 
-    public Task(long id, String user, String content, String status, String time) {
+    public Task(long id, String user, String content, String status, String startTime, String stopTime, String time) {
         this.id = id;
         this.user = user;
         this.content = content;
         this.status = status;
+        this.startTime = startTime;
+        this.stopTime = stopTime;
         this.time = time;
     }
 
@@ -70,5 +76,21 @@ public class Task {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getStopTime() {
+        return stopTime;
+    }
+
+    public void setStopTime(String stopTime) {
+        this.stopTime = stopTime;
     }
 }

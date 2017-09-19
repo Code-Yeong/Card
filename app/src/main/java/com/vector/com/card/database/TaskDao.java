@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.vector.com.card.domian.Task;
 
@@ -31,6 +32,7 @@ public class TaskDao implements BaseDao<Task> {
         contentValues.put("content", task.getContent());
         contentValues.put("status", task.getStatus());
         contentValues.put("time", task.getTime());
+        contentValues.put("starttime", task.getStartTime());
         contentValues.put("userid", task.getUser());
         return sqLiteDatabase.insert("tasks", null, contentValues);
     }
@@ -54,16 +56,19 @@ public class TaskDao implements BaseDao<Task> {
         sqLiteDatabase = database.getWritableDatabase();
         contentValues.clear();
         contentValues.put("status", task.getStatus());
+        contentValues.put("stoptime", task.getStopTime());
+        Log.i("info", "insert stoptime is " + task.getStopTime());
         return sqLiteDatabase.update("tasks", contentValues, "id=?", new String[]{String.valueOf(task.getId())});
     }
 
     @Override
     public Task queryById(long id) {
         sqLiteDatabase = database.getReadableDatabase();
-        Cursor c = sqLiteDatabase.query("tasks", new String[]{"id", "content", "status", "time"}, "id=?", new String[]{String.valueOf(id)}, null, null, null, null);
+        Cursor c = sqLiteDatabase.query("tasks", new String[]{"id", "content", "status", "starttime","starttime", "time"}, "id=?", new String[]{String.valueOf(id)}, null, null, null, null);
         Task task = null;
         if (c.moveToNext()) {
-            task = new Task(c.getInt(c.getColumnIndex("id")), c.getString(c.getColumnIndex("userid")), c.getString(c.getColumnIndex("content")), c.getString(c.getColumnIndex("status")), c.getString(c.getColumnIndex("time")));
+            task = new Task(c.getInt(c.getColumnIndex("id")), c.getString(c.getColumnIndex("userid")), c.getString(c.getColumnIndex("content")), c.getString(c.getColumnIndex("status")),
+                    c.getString(c.getColumnIndex("stoptime")),c.getString(c.getColumnIndex("starttime")), c.getString(c.getColumnIndex("time")));
         }
         c.close();
         return task;
@@ -71,11 +76,12 @@ public class TaskDao implements BaseDao<Task> {
 
     public List<Task> queryByUserId(long id) {
         sqLiteDatabase = database.getReadableDatabase();
-        Cursor c = sqLiteDatabase.query("tasks", new String[]{"id", "content", "status", "time", "userid"}, "userid=?", new String[]{String.valueOf(id)}, null, null, "status ASC");
+        Cursor c = sqLiteDatabase.query("tasks", new String[]{"id", "content", "status", "starttime","stoptime", "time", "userid"}, "userid=?", new String[]{String.valueOf(id)}, null, null, "status ASC");
         List<Task> list = new ArrayList<>();
         Task task = null;
         while (c.moveToNext()) {
-            task = new Task(c.getInt(c.getColumnIndex("id")), c.getString(c.getColumnIndex("userid")), c.getString(c.getColumnIndex("content")), c.getString(c.getColumnIndex("status")), c.getString(c.getColumnIndex("time")));
+            task = new Task(c.getInt(c.getColumnIndex("id")), c.getString(c.getColumnIndex("userid")), c.getString(c.getColumnIndex("content")), c.getString(c.getColumnIndex("status")), c.getString(c.getColumnIndex("starttime")),
+                    c.getString(c.getColumnIndex("stoptime")),c.getString(c.getColumnIndex("time")));
             list.add(task);
         }
         c.close();

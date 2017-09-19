@@ -3,6 +3,7 @@ package com.vector.com.card.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,14 +33,15 @@ public class RecyclerViewAdapterForTask extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         MyViewHolder viewHolder = (MyViewHolder) holder;
         viewHolder.tv_content.setText(list.get(position).getContent());
-        viewHolder.tv_id.setText("No." + (position + 1));
+        viewHolder.tv_time.setText(list.get(position).getStartTime());
+        viewHolder.tv_id.setText( (position + 1)+"");
         String status = list.get(position).getStatus();
         if (status.equals("0")) {
-            viewHolder.tv_time.setText("进行中");
-            viewHolder.tv_time.setTextColor(Color.GREEN);
+            viewHolder.tv_status.setText("进行中");
+            viewHolder.tv_status.setTextColor(Color.GREEN);
         } else {
-            viewHolder.tv_time.setText("已终止");
-            viewHolder.tv_time.setTextColor(Color.LTGRAY);
+            viewHolder.tv_status.setText("已终止");
+            viewHolder.tv_status.setTextColor(Color.LTGRAY);
         }
     }
 
@@ -55,13 +57,21 @@ public class RecyclerViewAdapterForTask extends RecyclerView.Adapter {
         return list.get(position).getId();
     }
 
+    public String getItemStartTime(int position) {
+        return list.get(position).getStartTime();
+    }
+
+    public String getItemStopTime(int position) {
+        return list.get(position).getStopTime();
+    }
+
     @Override
     public int getItemCount() {
         return list.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_id, tv_content, tv_time, tv_look, tv_delete;
+        public TextView tv_id, tv_content, tv_time, tv_status, tv_look, tv_delete;
         public View view;
 
         public MyViewHolder(View itemView) {
@@ -70,6 +80,7 @@ public class RecyclerViewAdapterForTask extends RecyclerView.Adapter {
             tv_content = (TextView) itemView.findViewById(R.id.self_task_item_content);
             tv_id = (TextView) itemView.findViewById(R.id.self_task_item_id);
             tv_time = (TextView) itemView.findViewById(R.id.self_task_item_time);
+            tv_status = (TextView) itemView.findViewById(R.id.self_task_item_status);
         }
     }
 }

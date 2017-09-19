@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.vector.com.card.domian.Detail;
 import com.vector.com.card.utils.Utils;
@@ -48,7 +50,7 @@ public class DetailDao implements BaseDao<Detail> {
         return detail;
     }
 
-    public List<Detail> queryByTaskId(long id) {
+    public List<Detail> queryByTaskId(long id, String startTime, String stopTime) {
         List<Detail> list = new ArrayList<>();
         sqLiteDatabase = database.getReadableDatabase();
         Cursor c_detail = sqLiteDatabase.query("detail", new String[]{"id", "time", "task"}, "task=?", new String[]{String.valueOf(id)}, null, null, "time ASC");
@@ -58,8 +60,7 @@ public class DetailDao implements BaseDao<Detail> {
                     c_detail.getString(c_detail.getColumnIndex("time")), true);
             list.add(detail);
         }
-
-        return addTheNextDay(list);
+        return addTheNextDay(list, startTime, stopTime);
     }
 
     public List<Detail> queryAllByUserId(long user) {
@@ -70,6 +71,7 @@ public class DetailDao implements BaseDao<Detail> {
         while (c_tasks.moveToNext()) {
             String id = String.valueOf(c_tasks.getLong(c_tasks.getColumnIndex("id")));
             String content = String.valueOf(c_tasks.getString(c_tasks.getColumnIndex("content")));
+            //status:0-未完成，1-已完成
             boolean status = c_tasks.getString(c_tasks.getColumnIndex("status")).equals("0") ? false : true;
             if (!status) {
                 Cursor c_detail = sqLiteDatabase.query("detail", new String[]{"id", "time"}, "task=? AND time=?",
@@ -130,26 +132,26 @@ public class DetailDao implements BaseDao<Detail> {
         return sortedList;
     }
 
-    public List<Detail> addTheNextDay(List<Detail> list) {
+    public List<Detail> addTheNextDay(List<Detail> list, String startTime, String stopTime) {
         List<Detail> newExsitTimeList = new ArrayList<>();
         List<String> exsitTimeList = new ArrayList<>();
         for (Detail d : list) {
             exsitTimeList.add(d.getTime());
         }
-        String firstDay;
-        if (list.size() == 0) {
-            firstDay = Utils.getCurrentDate();
-        } else {
-            firstDay = list.get(0).getTime();
-        }
-
+        String firstDay = startTime;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar calendar = Calendar.getInstance();
+        String today = dateFormat.format(calendar.getTime());
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         String nextDay = dateFormat.format(calendar.getTime());
         try {
             calendar.setTime(dateFormat.parse(firstDay));
             String currentDay = dateFormat.format(calendar.getTime());
+            Log.i("info", "Today:" + today + "----" + "nextDay:" + nextDay + "----" + "stopDay:" + stopTime);
+            if (stopTime != null && stopTime.compareTo(today) <= 0) {
+                Log.i("info", "yes...");
+                nextDay = stopTime;
+            }
             while (currentDay.compareTo(nextDay) <= 0) {
                 if (exsitTimeList.contains(currentDay)) {
                     newExsitTimeList.add(new Detail(0, null, currentDay, true));
