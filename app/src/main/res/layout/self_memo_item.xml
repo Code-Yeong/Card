@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#ffc">
+
+            <TextView
+                android:id="@+id/self_memo_item_time"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:gravity="left|center_vertical"
+                android:textColor="@color/blackColor"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/self_memo_item_delete"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/icon_delete" />
+
+            <ImageView
+                android:id="@+id/self_memo_item_edit"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/self_memo_item_delete"
+                android:src="@drawable/icon_edit"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/self_memo_item_star"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/self_memo_item_edit"
+                android:src="@drawable/icon_star_unactived" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/self_memo_item_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#fff"
+            android:gravity="left|top"
+            android:padding="15dp"
+            android:textSize="17sp" />
+    </LinearLayout>
+</LinearLayout>

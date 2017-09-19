@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="修改签名"
+            android:textColor="#fff"
+            android:textSize="@dimen/text_title" />
+
+        <ImageView
+            android:id="@+id/self_home_edit_mark_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:src="@android:drawable/ic_delete" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/self_home_edit_mark_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:textColor="#ff0000"
+        android:visibility="gone" />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/self_home_edit_mark_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="请输入新的签名" />
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/self_home_edit_mark_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="提交"
+        android:textColor="#fff" />
+</LinearLayout>

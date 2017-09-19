@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">好帮手</string>
+    <string name="title_activity_home">首页</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_task">任务管理</string>
+    <string name="title_activity_daily">每日任务</string>
+    <string name="title_activity_memo">备忘录</string>
+</resources>

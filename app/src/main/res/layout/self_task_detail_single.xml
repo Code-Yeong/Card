@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <RelativeLayout
+            android:id="@+id/self_task_detail_left"
+            android:layout_width="60dp"
+            android:layout_height="60dp">
+
+            <LinearLayout
+                android:id="@+id/self_task_detail_left_top"
+                android:layout_width="2dp"
+                android:layout_height="30dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:background="#ff0000"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/self_task_detail_left_center"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/shape_circle" />
+
+            <LinearLayout
+                android:id="@+id/self_task_detail_left_bottom"
+                android:layout_width="2dp"
+                android:layout_height="30dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="#ff0000"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/self_task_detail_time"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/self_task_detail_left"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/self_task_detail_status"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:paddingRight="10dp"/>
+    </RelativeLayout>
+</LinearLayout>

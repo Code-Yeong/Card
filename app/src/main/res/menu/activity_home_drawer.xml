@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_taskManage"
+            android:icon="@drawable/icon_tasklist"
+            android:title="任务管理" />
+        <item
+            android:id="@+id/nav_daily"
+            android:icon="@drawable/icon_daily"
+            android:title="日常任务" />
+        <item
+            android:id="@+id/nav_note"
+            android:icon="@drawable/icon_memo"
+            android:title="备忘录" />
+    </group>
+
+    <item android:title="登录状态">
+        <menu>
+            <item
+                android:id="@+id/nav_reLogin"
+                android:icon="@drawable/icon_retry"
+                android:title="重新登录" />
+            <item
+                android:id="@+id/nav_exit"
+                android:icon="@drawable/icon_exit"
+                android:title="退出系统" />
+        </menu>
+    </item>
+
+</menu>

@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ccc"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/home_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorPrimary" />
+        </android.support.design.widget.AppBarLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="?actionBarSize"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_margin="1dp"
+                android:background="#fff">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/icon_qin" />
+
+                <TextView
+                    android:id="@+id/home_qiandaozongshu"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:alpha="0.7"
+                    android:gravity="center_horizontal|bottom"
+                    android:paddingBottom="45dp"
+                    android:textColor="@color/blackColor" />
+
+                <RelativeLayout
+                    android:id="@+id/home_score_ll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/home_score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:gravity="center"
+                        android:textColor="@color/blackColor"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:labelFor="@id/home_score"
+                        android:text="努力值"
+                        android:textColor="@color/blackColor"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/home_score_animation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerInParent="true"
+                        android:gravity="center"
+                        android:text="+1"
+                        android:textColor="@color/blackColor"
+                        android:textSize="20sp"
+                        android:visibility="invisible" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/home_pic"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/icon_weiqiandao" />
+
+                    <TextView
+                        android:id="@+id/home_tip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/home_pic"
+                        android:layout_centerHorizontal="true"
+                        android:text="点击签到"
+                        android:textColor="@color/blackColor"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:background="#fff"
+                android:gravity="center">
+
+                <TableRow>
+
+                    <LinearLayout
+                        android:layout_weight="1"
+                        android:gravity="center">
+
+                        <com.vector.com.card.utils.MyImageView
+                            android:id="@+id/home_manage"
+                            android:layout_width="55dp"
+                            android:layout_height="55dp"
+                            android:src="@drawable/icon_tasklist" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_weight="1"
+                        android:gravity="center">
+
+                        <com.vector.com.card.utils.MyImageView
+                            android:id="@+id/home_task"
+                            android:layout_width="55dp"
+                            android:layout_height="55dp"
+                            android:src="@drawable/icon_daily" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_weight="1"
+                        android:gravity="center">
+
+                        <com.vector.com.card.utils.MyImageView
+                            android:id="@+id/home_memo"
+                            android:layout_width="55dp"
+                            android:layout_height="55dp"
+                            android:src="@drawable/memo" />
+                    </LinearLayout>
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="事务管理" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="日常任务" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="备忘录" />
+                </TableRow>
+            </TableLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:background="#fff"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="#519dcf">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center_vertical"
+                        android:text="星标记事"
+                        android:textColor="#fff"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/icon_watch" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:alpha="0.7"
+                        android:src="@drawable/icon_num1" />
+
+                    <TextView
+                        android:id="@+id/home_note_1"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:fontFamily="sans-serif-smallcaps"
+                        android:gravity="left|top"
+                        android:padding="3dp"
+                        android:textColor="@color/blackColor" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#f3f556" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:alpha="0.7"
+                        android:src="@drawable/icon_num2" />
+
+                    <TextView
+                        android:id="@+id/home_note_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:gravity="left|top"
+                        android:padding="3dp"
+                        android:textColor="@color/blackColor" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#f3f556" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:alpha="0.7"
+                        android:src="@drawable/icon_num3" />
+
+                    <TextView
+                        android:id="@+id/home_note_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:gravity="left|top"
+                        android:padding="3dp"
+                        android:textColor="@color/blackColor" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#f3f556" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:alpha="0.7"
+                        android:src="@drawable/icon_num4" />
+
+                    <TextView
+                        android:id="@+id/home_note_4"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:gravity="left|top"
+                        android:padding="3dp"
+                        android:textColor="@color/blackColor" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#f3f556" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:alpha="0.7"
+                        android:src="@drawable/icon_num5" />
+
+                    <TextView
+                        android:id="@+id/home_note_5"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:gravity="left|top"
+                        android:padding="3dp"
+                        android:textColor="@color/blackColor" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header_home"
+        app:menu="@menu/activity_home_drawer" />
+
+</android.support.v4.widget.DrawerLayout>
