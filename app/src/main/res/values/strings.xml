@@ -9,4 +9,6 @@
     <string name="title_activity_task">任务管理</string>
     <string name="title_activity_daily">每日任务</string>
     <string name="title_activity_memo">备忘录</string>
+    <string name="title_activity_score">得分详情</string>
+    <string name="title_activity_sign">签到日历</string>
 </resources>

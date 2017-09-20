@@ -55,6 +55,7 @@ public class TaskActivity extends BaseActivity {
         myRecyclerViewForTask.setListener(new MyRecyclerViewForTask.onGetListener() {
             @Override
             public void onClickDelete(View view, long id) {
+                Utils.vibrate(TaskActivity.this);
                 TaskDao taskDao = new TaskDao(TaskActivity.this);
                 if (taskDao.delete(id) > 0) {
                     Utils.showMsg(getWindow().getDecorView(), "删除成功");
@@ -64,6 +65,7 @@ public class TaskActivity extends BaseActivity {
 
             @Override
             public void onClickAbort(View view, long id) {
+                Utils.vibrate(TaskActivity.this);
                 TaskDao taskDao = new TaskDao(TaskActivity.this);
                 String text = ((TextView) view).getText().toString();
                 if (text.equals("终止")) {
@@ -79,6 +81,7 @@ public class TaskActivity extends BaseActivity {
 
             @Override
             public void onClickLook(View view, long id, String startTime, String stopTime) {
+                Utils.vibrate(TaskActivity.this);
                 int finishCount = 0;
                 View v = getLayoutInflater().inflate(R.layout.self_task_dialog, null);
                 ImageView iv_close = (ImageView) v.findViewById(R.id.self_task_dialog_close);
@@ -138,6 +141,7 @@ public class TaskActivity extends BaseActivity {
                 iv_close.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Utils.vibrate(TaskActivity.this);
                         dialog.dismiss();
                     }
                 });
@@ -148,6 +152,7 @@ public class TaskActivity extends BaseActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Utils.vibrate(TaskActivity.this);
                 LayoutInflater layoutInflater = getLayoutInflater();
                 View v = layoutInflater.inflate(R.layout.self_task_create, null);
                 final TextInputEditText et_content = (TextInputEditText) v.findViewById(R.id.self_task_create_content);
@@ -167,6 +172,7 @@ public class TaskActivity extends BaseActivity {
                 tv_startTime.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Utils.vibrate(TaskActivity.this);
                         LayoutInflater layoutInflater = getLayoutInflater();
                         View v2 = layoutInflater.inflate(R.layout.self_date_picker, null);
                         final Dialog dialog2 = new AlertDialog.Builder(TaskActivity.this).setView(v2).show();
@@ -176,6 +182,7 @@ public class TaskActivity extends BaseActivity {
                         iv_close.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                Utils.vibrate(TaskActivity.this);
                                 dialog2.dismiss();
                             }
                         });
@@ -183,6 +190,7 @@ public class TaskActivity extends BaseActivity {
                         cv.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
                             @Override
                             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+                                Utils.vibrate(TaskActivity.this);
                                 tv_startTime.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
                             }
                         });
@@ -190,6 +198,7 @@ public class TaskActivity extends BaseActivity {
                         btn_submit.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                Utils.vibrate(TaskActivity.this);
                                 dialog2.dismiss();
                             }
                         });
@@ -199,6 +208,7 @@ public class TaskActivity extends BaseActivity {
                 btn_submit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Utils.vibrate(TaskActivity.this);
                         String content = et_content.getText().toString().trim();
                         String startTime = tv_startTime.getText().toString().trim();
                         long id = getSharedPreferences("userInfo", Activity.MODE_PRIVATE).getLong("id", 0);
@@ -239,6 +249,7 @@ public class TaskActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Utils.vibrate(TaskActivity.this);
         int id = item.getItemId();
         if (id == android.R.id.home) {
             removeActivity();

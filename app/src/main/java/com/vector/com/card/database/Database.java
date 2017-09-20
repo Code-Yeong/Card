@@ -54,6 +54,14 @@ public class Database extends SQLiteOpenHelper {
             + "time varchar(20)"
             + ")";
 
+    private final String CREATE_TABLE_SCORE = "create table score("
+            + "id integer primary key autoincrement,"
+            + "userid varchar(10),"
+            + "content varchar(200),"
+            + "score varchar(10),"
+            + "time varchar(20)"
+            + ")";
+
     public Database(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
@@ -69,6 +77,7 @@ public class Database extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(CREATE_TABLE_USER);
         sqLiteDatabase.execSQL(CREATE_TABLE_SIGN);
         sqLiteDatabase.execSQL(CREATE_TABLE_MEMO);
+        sqLiteDatabase.execSQL(CREATE_TABLE_SCORE);
     }
 
     @Override

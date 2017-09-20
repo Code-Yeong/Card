@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#fff"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -14,8 +15,8 @@
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:gravity="center"
-            android:text="id"
-            android:textColor="@color/blackColor" />
+            android:textColor="@color/blackColor"
+            android:textSize="25sp" />
 
         <TextView
             android:id="@+id/self_daily_content"

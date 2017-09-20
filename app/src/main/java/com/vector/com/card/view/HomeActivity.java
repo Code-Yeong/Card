@@ -21,16 +21,20 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.vector.com.card.R;
 import com.vector.com.card.database.MemoDao;
+import com.vector.com.card.database.ScoreDao;
 import com.vector.com.card.database.SignDao;
 import com.vector.com.card.database.UserDao;
 import com.vector.com.card.domian.Memo;
+import com.vector.com.card.domian.Score;
 import com.vector.com.card.domian.Sign;
 import com.vector.com.card.domian.User;
 import com.vector.com.card.utils.MyImageView;
+import com.vector.com.card.utils.SignCalendar;
 import com.vector.com.card.utils.Utils;
 
 import java.util.List;
@@ -45,6 +49,7 @@ public class HomeActivity extends BaseActivity
     private ImageView iv_editMark, iv_qiandao;
     private MyImageView iv_task, iv_memo;
     private MyImageView iv_manage;
+    private RelativeLayout relativeLayout;
     private long userid;
     private boolean isSigned = false;
     private TextView tv_note1, tv_note2, tv_note3, tv_note4, tv_note5;
@@ -56,6 +61,7 @@ public class HomeActivity extends BaseActivity
         setContentView(R.layout.activity_home);
 
         toolbar = (Toolbar) findViewById(R.id.home_toolbar);
+        relativeLayout = (RelativeLayout) findViewById(R.id.home_score_ll);
         iv_qiandao = (ImageView) findViewById(R.id.home_pic);
         iv_manage = (MyImageView) findViewById(R.id.home_manage);
         iv_task = (MyImageView) findViewById(R.id.home_task);
@@ -91,9 +97,18 @@ public class HomeActivity extends BaseActivity
 
         init();
 
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.vibrate(HomeActivity.this);
+                startActivity(new Intent(HomeActivity.this, ScoreActivity.class));
+            }
+        });
+
         iv_manage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utils.vibrate(HomeActivity.this);
                 startActivity(new Intent(HomeActivity.this, TaskActivity.class));
             }
         });
@@ -101,6 +116,7 @@ public class HomeActivity extends BaseActivity
         iv_task.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utils.vibrate(HomeActivity.this);
                 startActivity(new Intent(HomeActivity.this, DailyActivity.class));
             }
         });
@@ -108,6 +124,7 @@ public class HomeActivity extends BaseActivity
         iv_memo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utils.vibrate(HomeActivity.this);
                 startActivity(new Intent(HomeActivity.this, MemoActivity.class));
             }
         });
@@ -115,6 +132,7 @@ public class HomeActivity extends BaseActivity
         iv_qiandao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utils.vibrate(HomeActivity.this);
                 if (!isSigned) {
                     isSigned = true;
                     tv_scoreAnimation.setVisibility(View.VISIBLE);
@@ -126,7 +144,7 @@ public class HomeActivity extends BaseActivity
                     showSignedInfo(false);
                     setContinueSignedDays();
                 } else {
-                    Utils.showMsg(getWindow().getDecorView(), "您今天已签到");
+                    startActivity(new Intent(HomeActivity.this, SignActivity.class));
                 }
             }
         });
@@ -145,7 +163,7 @@ public class HomeActivity extends BaseActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-
+        Utils.vibrate(HomeActivity.this);
         if (id == R.id.nav_taskManage) {
             startActivity(new Intent(this, TaskActivity.class));
         } else if (id == R.id.nav_daily) {
@@ -189,6 +207,7 @@ public class HomeActivity extends BaseActivity
 
         @Override
         public void onClick(View view) {
+            Utils.vibrate(HomeActivity.this);
             LayoutInflater inflater = getLayoutInflater();
             View v = inflater.inflate(R.layout.self_home_edit_mark, null);
             ImageView iv_close = (ImageView) v.findViewById(R.id.self_home_edit_mark_close);
@@ -200,6 +219,7 @@ public class HomeActivity extends BaseActivity
             iv_close.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Utils.vibrate(HomeActivity.this);
                     dialog.dismiss();
                 }
             });
@@ -207,6 +227,7 @@ public class HomeActivity extends BaseActivity
             btn_submit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Utils.vibrate(HomeActivity.this);
                     String content = et_content.getText().toString().trim();
                     if (content.length() == 0) {
                         tv_tip.setText("你还未输入任何内容");
@@ -242,12 +263,14 @@ public class HomeActivity extends BaseActivity
     public void showSignedInfo(boolean isIniting) {
         UserDao userDao = new UserDao(HomeActivity.this);
         SignDao signDao = new SignDao(HomeActivity.this);
+        ScoreDao scoreDao = new ScoreDao(HomeActivity.this);
         String score_str = userDao.getSignedScore(userid);
         int score = Integer.parseInt(score_str);
 
         if (isSigned && !isIniting) {
             if (signDao.insert(new Sign(String.valueOf(userid))) > 0) {
                 score += 1;
+                scoreDao.insert(new Score(String.valueOf(userid), "签到", "1"));
                 userDao.updateScore(new User(userid, String.valueOf(score)));
                 setContinueSignedDays();
             }

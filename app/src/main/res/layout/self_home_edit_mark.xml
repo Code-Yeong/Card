@@ -19,12 +19,12 @@
 
         <ImageView
             android:id="@+id/self_home_edit_mark_close"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:src="@android:drawable/ic_delete" />
+            android:layout_marginRight="5dp"
+            android:src="@drawable/icon_no" />
     </RelativeLayout>
 
     <TextView
@@ -45,6 +45,9 @@
             android:id="@+id/self_home_edit_mark_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="left|top"
+            android:padding="5dp"
             android:hint="请输入新的签名" />
     </android.support.design.widget.TextInputLayout>
 
@@ -52,6 +55,7 @@
         android:id="@+id/self_home_edit_mark_submit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
         android:text="提交"
         android:textColor="#fff" />
 </LinearLayout>

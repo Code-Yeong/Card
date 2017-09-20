@@ -2,6 +2,7 @@ package com.vector.com.card.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -122,6 +123,24 @@ public class SignDao implements BaseDao<Sign> {
             count = 0;
         }
         return count;
+    }
+
+    public List<Integer> getDates(String user, int year, int month) {
+        List<Integer> dates = new ArrayList<>();
+        sqLiteDatabase = database.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.query("signs", new String[]{"time"}, "user=?", new String[]{String.valueOf(user)}, null, null, "time ASC");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month - 1);
+        String date = simpleDateFormat.format(calendar.getTime());
+        while (cursor.moveToNext()) {
+            String d = cursor.getString(cursor.getColumnIndex("time"));
+            if (d.startsWith(date)) {
+                dates.add(Integer.parseInt(d.substring(8, 10)));
+            }
+        }
+        return dates;
     }
 
 }

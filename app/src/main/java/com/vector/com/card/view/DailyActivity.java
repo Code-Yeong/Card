@@ -21,6 +21,7 @@ import com.vector.com.card.database.BaseDao;
 import com.vector.com.card.database.DetailDao;
 import com.vector.com.card.domian.Detail;
 import com.vector.com.card.utils.MyRecyclerViewForDaily;
+import com.vector.com.card.utils.SpaceItemDecoration;
 import com.vector.com.card.utils.Utils;
 
 import java.util.List;
@@ -40,13 +41,13 @@ public class DailyActivity extends BaseActivity {
         recyclerView = (MyRecyclerViewForDaily) findViewById(R.id.daily_recycler);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
-        recyclerView.setHasFixedSize(true);
         init();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        Utils.vibrate(DailyActivity.this);
         if (id == android.R.id.home) {
             removeActivity();
         }
@@ -54,9 +55,9 @@ public class DailyActivity extends BaseActivity {
     }
 
     public void init() {
-        RecyclerViewAdapterForDaily adapterForDaily = new RecyclerViewAdapterForDaily(getData());
+        RecyclerViewAdapterForDaily adapterForDaily = new RecyclerViewAdapterForDaily(DailyActivity.this, getData());
         recyclerView.setAdapter(adapterForDaily);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new SpaceItemDecoration(0, 0, 0, 10));
     }
 
     public List<Detail> getData() {

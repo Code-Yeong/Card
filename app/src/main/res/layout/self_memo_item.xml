@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
+    android:layout_margin="5dp"
     android:orientation="vertical">
 
     <LinearLayout
@@ -13,16 +13,16 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="#ffc">
+            android:background="@drawable/self_circle_angle_title">
 
             <TextView
                 android:id="@+id/self_memo_item_time"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
+                android:alpha="0.7"
                 android:gravity="left|center_vertical"
-                android:textColor="@color/blackColor"
-                android:alpha="0.4"
+                android:textColor="#fff"
                 android:textSize="18sp" />
 
             <ImageView
@@ -58,9 +58,10 @@
             android:id="@+id/self_memo_item_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#fff"
+            android:background="@drawable/self_circle_angle_content"
             android:gravity="left|top"
-            android:padding="15dp"
-            android:textSize="17sp" />
+            android:padding="10dp"
+            android:textColor="@color/blackColor"
+            android:textSize="14sp" />
     </LinearLayout>
 </LinearLayout>

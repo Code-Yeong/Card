@@ -1,6 +1,7 @@
 package com.vector.com.card.utils;
 
 import android.content.Context;
+import android.os.Vibrator;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 
@@ -28,6 +29,11 @@ public class Utils {
 
     public static void showMsg(View view, String msg) {
         Snackbar.make(view, msg, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+    }
+
+    public static void vibrate(Context context) {
+        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.vibrate(20);
     }
 
     public static String getCurrentTime() {

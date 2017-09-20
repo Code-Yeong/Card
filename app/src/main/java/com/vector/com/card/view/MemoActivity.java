@@ -3,6 +3,7 @@ package com.vector.com.card.view;
 import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.drawable.Drawable;
+import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
@@ -23,6 +24,7 @@ import com.vector.com.card.adapter.RecyclerViewAdapterForMemo;
 import com.vector.com.card.database.MemoDao;
 import com.vector.com.card.domian.Memo;
 import com.vector.com.card.utils.MyRecyclerViewForMemo;
+import com.vector.com.card.utils.SpaceItemDecoration;
 import com.vector.com.card.utils.Utils;
 
 import java.util.List;
@@ -49,13 +51,15 @@ public class MemoActivity extends BaseActivity {
         floatingActionButton = (FloatingActionButton) findViewById(R.id.memo_add);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new SpaceItemDecoration(10, 10, 10, 20));
+//        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         init();
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             boolean isStar = false;
 
             @Override
             public void onClick(View v) {
+                Utils.vibrate(MemoActivity.this);
                 View view = getLayoutInflater().inflate(R.layout.self_memo_create_item_dialog, null);
                 final Dialog dialog = new AlertDialog.Builder(MemoActivity.this).setView(view).show();
                 final Drawable left = v.getContext().getResources().getDrawable(R.drawable.icon_switch_left);
@@ -68,6 +72,7 @@ public class MemoActivity extends BaseActivity {
                 iv_close.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Utils.vibrate(MemoActivity.this);
                         dialog.dismiss();
                     }
                 });
@@ -75,6 +80,7 @@ public class MemoActivity extends BaseActivity {
                 iv_switch.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Utils.vibrate(MemoActivity.this);
                         if (isStar) {
                             iv_switch.setImageDrawable(right);
                             isStar = false;
@@ -88,6 +94,7 @@ public class MemoActivity extends BaseActivity {
                 btn_submit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Utils.vibrate(MemoActivity.this);
                         String content = et_content.getText().toString();
                         if (!TextUtils.isEmpty(content)) {
                             Memo memo = new Memo(String.valueOf(userid), content, isStar ? "0" : "1");

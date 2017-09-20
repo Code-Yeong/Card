@@ -147,9 +147,7 @@ public class DetailDao implements BaseDao<Detail> {
         try {
             calendar.setTime(dateFormat.parse(firstDay));
             String currentDay = dateFormat.format(calendar.getTime());
-            Log.i("info", "Today:" + today + "----" + "nextDay:" + nextDay + "----" + "stopDay:" + stopTime);
             if (stopTime != null && stopTime.compareTo(today) <= 0) {
-                Log.i("info", "yes...");
                 nextDay = stopTime;
             }
             while (currentDay.compareTo(nextDay) <= 0) {

@@ -1,6 +1,7 @@
 package com.vector.com.card.adapter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,12 +15,15 @@ import android.widget.TextView;
 
 import com.vector.com.card.R;
 import com.vector.com.card.database.DetailDao;
+import com.vector.com.card.database.ScoreDao;
 import com.vector.com.card.database.UserDao;
 import com.vector.com.card.domian.Detail;
+import com.vector.com.card.domian.Score;
 import com.vector.com.card.domian.Sign;
 import com.vector.com.card.domian.Task;
 import com.vector.com.card.domian.User;
 import com.vector.com.card.utils.Utils;
+import com.vector.com.card.view.DailyActivity;
 import com.vector.com.card.view.HomeActivity;
 
 import java.util.List;
@@ -29,8 +33,10 @@ import java.util.List;
  */
 public class RecyclerViewAdapterForDaily extends RecyclerView.Adapter {
     private List<Detail> list;
+    private Context context;
 
-    public RecyclerViewAdapterForDaily(List<Detail> list) {
+    public RecyclerViewAdapterForDaily(Context context, List<Detail> list) {
+        this.context = context;
         this.list = list;
     }
 
@@ -62,15 +68,18 @@ public class RecyclerViewAdapterForDaily extends RecyclerView.Adapter {
                     DetailDao detailDao = new DetailDao(buttonView.getContext());
                     long result = detailDao.insert(new Detail(String.valueOf(list.get(position).getTask())));
                     if (result > 0) {
+                        Utils.vibrate(context);
                         myViewHolder.chk_unfinished.setVisibility(View.INVISIBLE);
                         myViewHolder.iv_finished.setVisibility(View.VISIBLE);
 
                         SharedPreferences sharedPreferences = buttonView.getContext().getSharedPreferences("userInfo", Activity.MODE_PRIVATE);
                         long userid = sharedPreferences.getLong("id", 0);
                         UserDao userDao = new UserDao(buttonView.getContext());
+                        ScoreDao scoreDao = new ScoreDao(buttonView.getContext());
                         String score_str = userDao.getSignedScore(userid);
                         int score = Integer.parseInt(score_str);
                         score += 2;
+                        scoreDao.insert(new Score(String.valueOf(userid), "完成日常任务", "2"));
                         userDao.updateScore(new User(userid, String.valueOf(score)));
                     }
                 }
