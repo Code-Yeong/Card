@@ -28,6 +28,36 @@
             android:layout_marginTop="?actionBarSize"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginBottom="2dp"
+                android:layout_marginTop="2dp"
+                android:background="#fff"
+                android:gravity="center_vertical|left"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp">
+
+                <ImageView
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:src="@drawable/icon_laba" />
+
+                <TextView
+                    android:id="@+id/home_broadcast"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center_vertical|left"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textColor="#000"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
@@ -187,167 +217,12 @@
                 </TableRow>
             </TableLayout>
 
-            <LinearLayout
+            <com.vector.com.card.utils.LineChart
+                android:id="@+id/home_lineChart"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="1dp"
-                android:background="#fff"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="#519dcf">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="10dp"
-                        android:gravity="center_vertical"
-                        android:text="星标记事"
-                        android:textColor="#fff"
-                        android:textSize="18sp" />
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="10dp"
-                        android:src="@drawable/icon_watch" />
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:alpha="0.7"
-                        android:src="@drawable/icon_num1" />
-
-                    <TextView
-                        android:id="@+id/home_note_1"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:fontFamily="sans-serif-smallcaps"
-                        android:gravity="left|top"
-                        android:padding="3dp"
-                        android:textColor="@color/blackColor" />
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#f3f556" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:alpha="0.7"
-                        android:src="@drawable/icon_num2" />
-
-                    <TextView
-                        android:id="@+id/home_note_2"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:gravity="left|top"
-                        android:padding="3dp"
-                        android:textColor="@color/blackColor" />
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#f3f556" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:alpha="0.7"
-                        android:src="@drawable/icon_num3" />
-
-                    <TextView
-                        android:id="@+id/home_note_3"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:gravity="left|top"
-                        android:padding="3dp"
-                        android:textColor="@color/blackColor" />
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#f3f556" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:alpha="0.7"
-                        android:src="@drawable/icon_num4" />
-
-                    <TextView
-                        android:id="@+id/home_note_4"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:gravity="left|top"
-                        android:padding="3dp"
-                        android:textColor="@color/blackColor" />
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#f3f556" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:alpha="0.7"
-                        android:src="@drawable/icon_num5" />
-
-                    <TextView
-                        android:id="@+id/home_note_5"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:gravity="left|top"
-                        android:padding="3dp"
-                        android:textColor="@color/blackColor" />
-                </LinearLayout>
-            </LinearLayout>
+                android:layout_margin="5dp"
+                android:background="#fff" />
         </LinearLayout>
     </android.support.design.widget.CoordinatorLayout>
 

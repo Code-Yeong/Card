@@ -75,7 +75,7 @@ public class MemoDao implements BaseDao<Memo> {
         return list;
     }
 
-    public List<Memo> queryTopFiveBuUserId(long id) {
+    public List<Memo> queryStarMemoByUserId(long id) {
         sqLiteDatabase = database.getReadableDatabase();
         List<Memo> list = new ArrayList<>();
         Cursor c = sqLiteDatabase.query("memo", new String[]{"id", "content", "user", "flag", "time"},

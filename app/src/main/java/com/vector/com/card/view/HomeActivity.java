@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TextInputEditText;
@@ -33,6 +34,7 @@ import com.vector.com.card.domian.Memo;
 import com.vector.com.card.domian.Score;
 import com.vector.com.card.domian.Sign;
 import com.vector.com.card.domian.User;
+import com.vector.com.card.utils.LineChart;
 import com.vector.com.card.utils.MyImageView;
 import com.vector.com.card.utils.SignCalendar;
 import com.vector.com.card.utils.Utils;
@@ -44,7 +46,8 @@ public class HomeActivity extends BaseActivity
 
     private Toolbar toolbar;
     private SharedPreferences sharedPreferences;
-    private TextView tv_userName, tv_userMark;
+    private LineChart lineChart;
+    private TextView tv_userName, tv_userMark, tv_broadcast;
     private TextView tv_qiandaozongshu, tv_score, tv_scoreAnimation, tv_tip;
     private ImageView iv_editMark, iv_qiandao;
     private MyImageView iv_task, iv_memo;
@@ -52,7 +55,6 @@ public class HomeActivity extends BaseActivity
     private RelativeLayout relativeLayout;
     private long userid;
     private boolean isSigned = false;
-    private TextView tv_note1, tv_note2, tv_note3, tv_note4, tv_note5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,19 +63,17 @@ public class HomeActivity extends BaseActivity
         setContentView(R.layout.activity_home);
 
         toolbar = (Toolbar) findViewById(R.id.home_toolbar);
+
+        lineChart = (LineChart) findViewById(R.id.home_lineChart);
         relativeLayout = (RelativeLayout) findViewById(R.id.home_score_ll);
         iv_qiandao = (ImageView) findViewById(R.id.home_pic);
         iv_manage = (MyImageView) findViewById(R.id.home_manage);
         iv_task = (MyImageView) findViewById(R.id.home_task);
         iv_memo = (MyImageView) findViewById(R.id.home_memo);
+        tv_broadcast = (TextView) findViewById(R.id.home_broadcast);
         tv_qiandaozongshu = (TextView) findViewById(R.id.home_qiandaozongshu);
         tv_score = (TextView) findViewById(R.id.home_score);
         tv_tip = (TextView) findViewById(R.id.home_tip);
-        tv_note1 = (TextView) findViewById(R.id.home_note_1);
-        tv_note2 = (TextView) findViewById(R.id.home_note_2);
-        tv_note3 = (TextView) findViewById(R.id.home_note_3);
-        tv_note4 = (TextView) findViewById(R.id.home_note_4);
-        tv_note5 = (TextView) findViewById(R.id.home_note_5);
 
         tv_scoreAnimation = (TextView) findViewById(R.id.home_score_animation);
         sharedPreferences = getSharedPreferences("userInfo", Activity.MODE_PRIVATE);
@@ -193,9 +193,20 @@ public class HomeActivity extends BaseActivity
         setSignedStatus();
         showSignedInfo(true);
         setContinueSignedDays();
-        initTopFiveMemos();
-    }
+        initTopMarque();
 
+        lineChart.setyMaxValue(10);
+        lineChart.setData(new float[]{1, 4, 3, 4, 6, 3, 1, 10, 9, 0});
+        lineChart.setDataDotColor(Color.RED);
+        lineChart.setLineColor(Color.GREEN);
+        lineChart.setCircleWidth(10);
+        lineChart.setxLines(15);
+        lineChart.setyLines(20);
+        lineChart.setxMaxValue(12);
+        lineChart.setxLabel("月份");
+        lineChart.setyLabel("分数");
+        lineChart.invalidate();
+    }
 
     private class EditMarkListener implements View.OnClickListener {
 
@@ -290,24 +301,17 @@ public class HomeActivity extends BaseActivity
         tv_qiandaozongshu.setText(count < 2 ? "已签到" + count + "天" : "已连续签到" + count + "天");
     }
 
-    public void initTopFiveMemos() {
+    public void initTopMarque() {
+        String str = "";
         MemoDao memoDao = new MemoDao(this);
-        List<Memo> list = memoDao.queryTopFiveBuUserId(userid);
-        int count = list.size();
-        if (count > 0) {
-            tv_note1.setText(list.get(0).getContent());
+        List<Memo> list = memoDao.queryStarMemoByUserId(userid);
+        for (int i = 0; i < list.size(); i++) {
+            str += "[" + (i + 1) + "/" + list.size() + "]" + list.get(i).getContent() + "\t ";
         }
-        if (count > 1) {
-            tv_note2.setText(list.get(1).getContent());
-        }
-        if (count > 2) {
-            tv_note3.setText(list.get(2).getContent());
-        }
-        if (count > 3) {
-            tv_note4.setText(list.get(3).getContent());
-        }
-        if (count > 4) {
-            tv_note5.setText(list.get(4).getContent());
+        if (str.equals("")) {
+            tv_broadcast.setText("没有内容可展示^_^!!");
+        } else {
+            tv_broadcast.setText(str);
         }
     }
 }
