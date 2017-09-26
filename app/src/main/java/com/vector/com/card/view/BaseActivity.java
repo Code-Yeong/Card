@@ -2,6 +2,12 @@ package com.vector.com.card.view;
 
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.MenuItem;
+import android.widget.ImageView;
+
+import com.vector.com.card.domian.Notice;
+import com.vector.com.card.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +16,10 @@ import java.util.List;
  * Created by Administrator on 2017/9/3.
  */
 public class BaseActivity extends AppCompatActivity {
+
+    public ImageView iv_empty;
+    public Notice notice;
+
     public static List<Activity> list = new ArrayList<>();
 
     /**
@@ -24,16 +34,17 @@ public class BaseActivity extends AppCompatActivity {
      */
     protected void removeActivity() {
         Activity a = list.get(list.size() - 1);
-        a.finish();
         list.remove(a);
+        a.finish();
     }
 
     /**
      * 返回到第一个界面，重新登录
      */
     protected void backToFirst() {
-        for (int i = list.size(); i > 1; i--) {
-            Activity a = list.get(i - 1);
+        for (int i = list.size() - 1; i > 0; i--) {
+            Activity a = list.get(i);
+            list.remove(i);
             a.finish();
         }
     }
@@ -42,13 +53,29 @@ public class BaseActivity extends AppCompatActivity {
      * 关闭所有界面，退出登录
      */
     protected void removeAll() {
-        for (int i = list.size(); i > 0; i--) {
-            list.get(i - 1).finish();
+        for (int i = (list.size() - 1); i > -1; i--) {
+            Activity a = list.get(i);
+            list.remove(a);
+            a.finish();
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Utils.vibrate(this);
+        if (item.getItemId() == android.R.id.home) {
+            removeActivity();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        removeActivity();
     }
 }

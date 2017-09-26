@@ -8,6 +8,7 @@ import com.vector.com.card.utils.Utils;
 public class User {
     private long id;
     private String name;
+    private String realName;
     private String time;
     private String password;
     private String mark;
@@ -19,7 +20,14 @@ public class User {
         this.password = password;
         this.keepLogin = "0";
         this.score = "0";
+        this.realName="待修改";
         this.time = Utils.getCurrentTime();
+    }
+
+    public User(long id, String realName, String mark) {
+        this.id = id;
+        this.realName = realName;
+        this.mark = mark;
     }
 
     public User(long id, String score) {
@@ -41,13 +49,14 @@ public class User {
         this.score = score;
     }
 
-    public User(long id, String name, String time, String password, String mark, String score) {
+    public User(long id, String name, String time, String password, String mark, String score,String realName,int flag) {
         this.id = id;
         this.name = name;
         this.time = time;
         this.password = password;
         this.mark = mark;
         this.score = score;
+        this.realName=realName;
     }
 
     public long getId() {
@@ -64,6 +73,14 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
     }
 
     public String getTime() {

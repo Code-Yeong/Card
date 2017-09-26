@@ -17,6 +17,7 @@ public class Database extends SQLiteOpenHelper {
     private final String CREATE_TABLE_USER = "create table user("
             + "id integer primary key autoincrement,"
             + "name varchar(10),"
+            + "realname varchar(20),"
             + "password varchar(10),"
             + "mark varchar(100),"
             + "score varchar(10),"
@@ -54,10 +55,20 @@ public class Database extends SQLiteOpenHelper {
             + "time varchar(20)"
             + ")";
 
+    private final String CREATE_TABLE_NOTICE = "create table notice("
+            + "id integer primary key autoincrement,"
+            + "user varchar(10),"
+            + "content varchar(200),"
+            + "ntype varchar(2),"
+            + "status varchar(2),"
+            + "time varchar(20)"
+            + ")";
+
     private final String CREATE_TABLE_SCORE = "create table score("
             + "id integer primary key autoincrement,"
             + "userid varchar(10),"
             + "content varchar(200),"
+            + "stype varchar(2),"
             + "score varchar(10),"
             + "time varchar(20)"
             + ")";
@@ -78,6 +89,7 @@ public class Database extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(CREATE_TABLE_SIGN);
         sqLiteDatabase.execSQL(CREATE_TABLE_MEMO);
         sqLiteDatabase.execSQL(CREATE_TABLE_SCORE);
+        sqLiteDatabase.execSQL(CREATE_TABLE_NOTICE);
     }
 
     @Override

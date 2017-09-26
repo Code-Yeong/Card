@@ -27,8 +27,10 @@ import android.widget.TextView;
 import com.vector.com.card.R;
 import com.vector.com.card.adapter.RecyclerViewAdapterForTask;
 import com.vector.com.card.database.DetailDao;
+import com.vector.com.card.database.NoticeDao;
 import com.vector.com.card.database.TaskDao;
 import com.vector.com.card.domian.Detail;
+import com.vector.com.card.domian.Notice;
 import com.vector.com.card.domian.Task;
 import com.vector.com.card.utils.DialogSingleItem;
 import com.vector.com.card.utils.MyRecyclerViewForTask;
@@ -51,6 +53,7 @@ public class TaskActivity extends BaseActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        iv_empty = (ImageView) findViewById(R.id.home_empty);
         myRecyclerViewForTask = (MyRecyclerViewForTask) findViewById(R.id.task_recyclerView);
         myRecyclerViewForTask.setListener(new MyRecyclerViewForTask.onGetListener() {
             @Override
@@ -158,7 +161,6 @@ public class TaskActivity extends BaseActivity {
                 final TextInputEditText et_content = (TextInputEditText) v.findViewById(R.id.self_task_create_content);
                 final ImageView iv_close = (ImageView) v.findViewById(R.id.self_task_create_close);
                 final Button btn_submit = (Button) v.findViewById(R.id.self_task_create_submit);
-                final TextView tv_tip = (TextView) v.findViewById(R.id.self_task_create_tip);
                 final TextView tv_startTime = (TextView) v.findViewById(R.id.self_task_create_starttime);
                 final Dialog dialog = new AlertDialog.Builder(TaskActivity.this).setView(v).show();
                 iv_close.setOnClickListener(new View.OnClickListener() {
@@ -211,24 +213,21 @@ public class TaskActivity extends BaseActivity {
                         Utils.vibrate(TaskActivity.this);
                         String content = et_content.getText().toString().trim();
                         String startTime = tv_startTime.getText().toString().trim();
-                        long id = getSharedPreferences("userInfo", Activity.MODE_PRIVATE).getLong("id", 0);
+                        long id = Utils.getUserId(TaskActivity.this);
                         if (content.length() > 0) {
                             TaskDao taskDao = new TaskDao(TaskActivity.this);
                             long result = taskDao.insert(new Task(String.valueOf(id), content, startTime));
                             if (result > 0) {
+                                new NoticeDao(TaskActivity.this).insert(new Notice(String.valueOf(id), "成功创建学习任务", "E"));
                                 et_content.setText("");
                                 recyclerViewAdapterForTask = new RecyclerViewAdapterForTask(getData());
                                 myRecyclerViewForTask.setAdapter(recyclerViewAdapterForTask);
-                                tv_tip.setText("*添加成功[#" + result + "]");
-                                tv_tip.setTextColor(Color.GREEN);
-                                tv_tip.setVisibility(View.VISIBLE);
+                                Utils.showMsg(v.getRootView(), "添加成功");
                             } else {
-                                tv_tip.setText("*添加失败，请重试");
-                                tv_tip.setVisibility(View.VISIBLE);
+                                Utils.showMsg(v, "添加失败");
                             }
                         } else {
-                            tv_tip.setText("*请正确填写任务内容");
-                            tv_tip.setVisibility(View.VISIBLE);
+                            Utils.showMsg(v, "请正确填写任务内容");
                         }
                     }
                 });
@@ -240,6 +239,11 @@ public class TaskActivity extends BaseActivity {
 
     public void init() {
         list = getData();
+        if (list.size() > 0) {
+            iv_empty.setVisibility(View.GONE);
+        } else {
+            iv_empty.setVisibility(View.VISIBLE);
+        }
         layoutManager = new LinearLayoutManager(this);
         myRecyclerViewForTask.setLayoutManager(layoutManager);
         recyclerViewAdapterForTask = new RecyclerViewAdapterForTask(list);
@@ -247,19 +251,9 @@ public class TaskActivity extends BaseActivity {
         myRecyclerViewForTask.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Utils.vibrate(TaskActivity.this);
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            removeActivity();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     public List<Task> getData() {
         TaskDao taskDao = new TaskDao(this);
-        return taskDao.queryByUserId(getSharedPreferences("userInfo", Activity.MODE_PRIVATE).getLong("id", 0));
+        return taskDao.queryByUserId(Utils.getUserId(TaskActivity.this));
     }
 
     public List<Detail> getDetails(long id, String startTime, String stopTime) {

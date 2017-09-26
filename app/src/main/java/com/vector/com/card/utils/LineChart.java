@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -56,6 +55,12 @@ public class LineChart extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         width = MeasureSpec.getSize(widthMeasureSpec);
         height = MeasureSpec.getSize(heightMeasureSpec);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        xDots = null;
+        yDots = null;
         xUnit = (width - 2 * margin) / xLines;
         yUnit = (height - 2 * margin) / yLines;
         xDots = new float[xLines + 1];
@@ -63,11 +68,10 @@ public class LineChart extends View {
         xDots[0] = margin;
         yDots[0] = height - margin;
 
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+        Paint p = null;
+        if (p == null) {
+            p = new Paint(Paint.ANTI_ALIAS_FLAG);
+        }
         p.setStrokeWidth(xWidth);
         p.setColor(xColor);
         canvas.drawLine(margin, height - margin, width - margin, height - margin, p);
@@ -80,11 +84,11 @@ public class LineChart extends View {
         //画X、Y轴上的标签
         p.setTextSize(axisLabelSize);
         canvas.drawText(yLabel, margin - 20, margin - 10, p);
-        canvas.drawText(xLabel, width - margin + 10, height - margin , p);
+        canvas.drawText(xLabel, width - margin + 10, height - margin, p);
 
         //画x轴上的点
         for (int i = 0; i < xLines; i++) {
-            canvas.drawLine((i + 1) * xUnit + margin, height - margin, (i + 1) * xUnit + margin, height - margin - 10, p);
+            canvas.drawLine((i + 1) * xUnit + margin, height - margin, (i + 1) * xUnit + margin, height - margin - 5, p);
             xDots[i + 1] = (i + 1) * xUnit + margin;
             if (i % 2 == 1 && i > 0) {
                 canvas.drawText(String.valueOf((int) ((i + 1) * xMaxValue / xLines)), (i + 1) * xUnit + margin * 3 / 4, height - margin / 3, p);
@@ -94,7 +98,7 @@ public class LineChart extends View {
         //画y轴上的点
         for (int j = 0; j < yLines; j++) {
             yDots[j + 1] = height - (j + 1) * yUnit - margin;
-            canvas.drawLine(margin, height - (j + 1) * yUnit - margin, margin + 10, height - (j + 1) * yUnit - margin, p);
+            canvas.drawLine(margin, height - (j + 1) * yUnit - margin, margin + 5, height - (j + 1) * yUnit - margin, p);
             if ((j + 1) == yLines / 2 || (j + 1) == yLines) {
                 canvas.drawText(String.valueOf((int) (yMaxValue * (j + 1) / yLines)), margin / 3, height - (j + 1) * yUnit - margin * 3 / 4, p);
             }
@@ -102,7 +106,6 @@ public class LineChart extends View {
         initCoordinates();
         int m = coordinates.size();
         int temp = 0;
-        Log.i("info", "m:" + m);
         for (int n = 0; n < coordinates.size(); n++) {
             if (m > 1) {
                 temp = n + 1;
@@ -117,7 +120,6 @@ public class LineChart extends View {
             p.setColor(dataDotColor);
             canvas.drawCircle(coordinates.get(n).get("x"), coordinates.get(n).get("y"), circleWidth, p);
         }
-
         super.onDraw(canvas);
     }
 
@@ -129,7 +131,9 @@ public class LineChart extends View {
     private void initCoordinates() {
         Map<String, Float> map;
         coordinates.clear();
-        for (int k = 0; k < data.length; k++) {
+        //取数据点个数和X轴上坐标点数二者的最小值
+        int count = Math.min(data.length, xLines);
+        for (int k = 0; k < count; k++) {
             map = new HashMap<>();
             map.put("x", xDots[(k + 1)]);
             map.put("y", (float) (height - margin - (height - 2 * margin) * ((data[k] * 100.0 / yMaxValue) / 100.0)));

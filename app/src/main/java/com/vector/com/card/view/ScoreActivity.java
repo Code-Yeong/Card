@@ -8,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.vector.com.card.R;
 import com.vector.com.card.adapter.RecyclerViewAdapterForScore;
@@ -33,21 +35,13 @@ public class ScoreActivity extends BaseActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        userid = getSharedPreferences("userInfo", Activity.MODE_PRIVATE).getLong("id", 0);
+        userid = Utils.getUserId(this);
         scoreDao = new ScoreDao(this);
+        iv_empty = (ImageView) findViewById(R.id.score_empty);
         recyclerView = (RecyclerView) findViewById(R.id.score_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         init();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Utils.vibrate(ScoreActivity.this);
-        if (item.getItemId() == android.R.id.home) {
-            removeActivity();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     public void init() {
@@ -57,6 +51,11 @@ public class ScoreActivity extends BaseActivity {
 
     public List<Score> getData() {
         List<Score> list = scoreDao.queryBuUserId(userid);
+        if (list.size() > 0) {
+            iv_empty.setVisibility(View.GONE);
+        } else {
+            iv_empty.setVisibility(View.VISIBLE);
+        }
         return list;
     }
 }

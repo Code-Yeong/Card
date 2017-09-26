@@ -7,4 +7,5 @@
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_title">23sp</dimen>
+    <dimen name="home_pic_size">35dp</dimen>
 </resources>

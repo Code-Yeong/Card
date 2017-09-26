@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.vector.com.card.R;
 import com.vector.com.card.adapter.RecyclerViewAdapterForDaily;
@@ -28,6 +29,7 @@ import java.util.List;
 
 public class DailyActivity extends BaseActivity {
 
+    private long userid;
     private MyRecyclerViewForDaily recyclerView;
 
     @Override
@@ -38,20 +40,12 @@ public class DailyActivity extends BaseActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        iv_empty = (ImageView) findViewById(R.id.daily_empty);
         recyclerView = (MyRecyclerViewForDaily) findViewById(R.id.daily_recycler);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
+        userid = Utils.getUserId(this);
         init();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        Utils.vibrate(DailyActivity.this);
-        if (id == android.R.id.home) {
-            removeActivity();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     public void init() {
@@ -62,6 +56,12 @@ public class DailyActivity extends BaseActivity {
 
     public List<Detail> getData() {
         DetailDao detailDao = new DetailDao(this);
-        return detailDao.queryAllByUserId(getSharedPreferences("userInfo", Activity.MODE_PRIVATE).getLong("id", 0));
+        List<Detail> list = detailDao.queryAllByUserId(userid);
+        if (list.size() > 0) {
+            iv_empty.setVisibility(View.GONE);
+        } else {
+            iv_empty.setVisibility(View.VISIBLE);
+        }
+        return list;
     }
 }

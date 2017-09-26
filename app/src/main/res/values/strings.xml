@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">好帮手</string>
+    <string name="app_name">Brain</string>
     <string name="title_activity_home">首页</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -11,4 +11,15 @@
     <string name="title_activity_memo">备忘录</string>
     <string name="title_activity_score">得分详情</string>
     <string name="title_activity_sign">签到日历</string>
+    <string name="title_activity_personal">个人中心</string>
+    <string name="title_activity_manage">设置</string>
+    <string name="title_activity_version">版本信息</string>
+    <string name="title_activity_play">积分乐园</string>
+    <string name="title_activity_notice">消息通知</string>
+
+
+    <string name="score_sign">2</string>
+    <string name="score_daily">1</string>
+    <string name="score_bonus_sign">1</string>
+    <string name="score_bonus_task">3</string>
 </resources>

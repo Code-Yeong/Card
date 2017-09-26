@@ -9,21 +9,24 @@ public class Score {
     private long id;
     private String userid;
     private String content;
+    private String stype;
     private String score;
     private String time;
 
-    public Score(String userid, String content, String score) {
+    public Score(String userid, String content, String score,String type) {
         this.userid = userid;
         this.content = content;
         this.score = score;
+        this.stype=type;
         this.time = Utils.getCurrentTime();
     }
 
-    public Score(long id, String content, String score, String time) {
+    public Score(long id, String content, String score, String time,String type) {
         this.id = id;
         this.content = content;
         this.score = score;
         this.time = time;
+        this.stype=time;
     }
 
     public long getId() {
@@ -48,6 +51,14 @@ public class Score {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getStype() {
+        return stype;
+    }
+
+    public void setStype(String stype) {
+        this.stype = stype;
     }
 
     public String getScore() {

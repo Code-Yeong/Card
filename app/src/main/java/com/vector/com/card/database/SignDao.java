@@ -142,5 +142,4 @@ public class SignDao implements BaseDao<Sign> {
         }
         return dates;
     }
-
 }

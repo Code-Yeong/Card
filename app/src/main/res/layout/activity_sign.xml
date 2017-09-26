@@ -9,7 +9,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="60dp"
+        android:background="#efff0000">
 
         <TextView
             android:id="@+id/sign_date"
@@ -19,8 +20,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:gravity="center"
-            android:text="2017年10月"
-            android:textColor="@color/blackColor"
+            android:textColor="#fff"
             android:textSize="20sp" />
 
         <ImageView
@@ -43,6 +43,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:background="#efff0000"
         android:orientation="horizontal">
 
         <TextView
@@ -51,7 +52,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="日"
-            android:textColor="#ff0000" />
+            android:textColor="#fff" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -59,7 +60,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="一"
-            android:textColor="#0000ff" />
+            android:textColor="#fff" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -67,7 +68,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="二"
-            android:textColor="#0000ff" />
+            android:textColor="#fff" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -75,7 +76,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="三"
-            android:textColor="#0000ff" />
+            android:textColor="#fff" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -83,7 +84,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="四"
-            android:textColor="#0000ff" />
+            android:textColor="#fff" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -91,7 +92,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="五"
-            android:textColor="#0000ff" />
+            android:textColor="#fff" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -99,7 +100,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="六"
-            android:textColor="#ff0000" />
+            android:textColor="#fff" />
     </LinearLayout>
 
     <com.vector.com.card.utils.SignCalendar

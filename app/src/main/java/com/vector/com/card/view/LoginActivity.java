@@ -6,29 +6,48 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.vector.com.card.R;
+import com.vector.com.card.adapter.RecyclerViewAdapterForUsers;
+import com.vector.com.card.database.NoticeDao;
+import com.vector.com.card.database.TempDataDaoImpl;
 import com.vector.com.card.database.UserDao;
+import com.vector.com.card.domian.Notice;
+import com.vector.com.card.domian.TempData;
 import com.vector.com.card.domian.User;
+import com.vector.com.card.utils.UserApplication;
 import com.vector.com.card.utils.Utils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class LoginActivity extends BaseActivity {
 
     private TextInputEditText et_loginName, et_loginPassword;
-    private Button btn_loginSubmit;
     private CheckBox chk_loginRemind;
     private boolean isRemind = false;
-    private SharedPreferences sharedPreferences;
-    private String FILENAME;
+    private List<Map<String, String>> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,33 +55,15 @@ public class LoginActivity extends BaseActivity {
         addActivity(this);
         setContentView(R.layout.activity_login);
 
-        FILENAME = this.getFilesDir().getPath().toString() + "userInfo.txt";
-        sharedPreferences = getSharedPreferences("userInfo", Activity.MODE_PRIVATE);
+        list = new ArrayList<>();
         et_loginName = (TextInputEditText) findViewById(R.id.login_name);
         et_loginPassword = (TextInputEditText) findViewById(R.id.login_password);
         chk_loginRemind = (CheckBox) findViewById(R.id.login_remind);
-
-        User user = Utils.readFromFile(FILENAME);
-        if (user != null && user.getKeepLogin().equals("1")) {
-            isRemind = true;
-            startActivity(new Intent(this, HomeActivity.class));
-        } else {
-            isRemind = false;
-        }
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        if (isRemind) {
-            et_loginName.setText(sharedPreferences.getString("name", null));
-            et_loginPassword.setText(sharedPreferences.getString("password", null));
-            chk_loginRemind.setChecked(true);
-        } else {
-            et_loginName.setText(sharedPreferences.getString("name", null));
-            et_loginPassword.setText(null);
-            chk_loginRemind.setChecked(false);
-        }
     }
 
     public void loginSubmit(View v) {
@@ -78,8 +79,20 @@ public class LoginActivity extends BaseActivity {
             return;
         }
         UserDao userDao = new UserDao(this);
-        if (userDao.validate(loginName, loginPassword, isRemind, FILENAME)) {
-            userDao.setLoginStatus(sharedPreferences.getLong("id", 0), isRemind ? 1 : 0);
+        if (userDao.validate(loginName, loginPassword)) {
+            TempData tempData = Utils.readFromFile(this);
+            if (tempData == null) {
+                tempData = new TempData(Long.parseLong(((UserApplication) (UserApplication.getInstance())).getUserId()), loginName, loginPassword,
+                        "on", "on", "on", "on", "on", "on", "on", "on");
+            } else {
+                tempData.setName(loginName);
+                if (isRemind) {
+                    tempData.setPassword(loginPassword);
+                } else {
+                    tempData.setPassword("");
+                }
+            }
+            new TempDataDaoImpl().saveLoginInfo(this, tempData);
             startActivity(new Intent(this, HomeActivity.class));
         } else {
             Utils.showMsg(getWindow().getDecorView(), "用户名或密码有误");
@@ -124,6 +137,7 @@ public class LoginActivity extends BaseActivity {
                     return;
                 } else {
                     if (userDao.insert(new User(registName, registPassword)) > 0) {
+//                        new NoticeDao(LoginActivity.this).insert(new Notice(String.valueOf(Utils.getUserId(LoginActivity.this)), "恭喜您注册成功", "S"));
                         btn_registSubmit.setEnabled(false);
                         et_registTip.setText("*恭喜您注册成功");
                         et_registName.clearFocus();
@@ -146,5 +160,67 @@ public class LoginActivity extends BaseActivity {
 
     public void setRemindStatus(boolean isRemindStatus) {
         isRemind = isRemindStatus;
+    }
+
+    public void initStoredUsers(View v) {
+        View view = getLayoutInflater().inflate(R.layout.self_login_user_selec, null);
+        RecyclerView rv = (RecyclerView) view.findViewById(R.id.self_login_user_select_list);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerViewAdapterForUsers adapter = new RecyclerViewAdapterForUsers(getData());
+        final PopupWindow popupWindow = new PopupWindow(view, et_loginName.getWidth(), LinearLayout.LayoutParams.WRAP_CONTENT);
+        popupWindow.setFocusable(true);
+        popupWindow.setOutsideTouchable(true);
+        adapter.setListener(new RecyclerViewAdapterForUsers.OnItemClickListener() {
+            @Override
+            public void onNameClicked(String name) {
+                popupWindow.dismiss();
+                for (Map map : list) {
+                    if (map.get("name").equals(name)) {
+                        String password = map.get("password").toString().trim();
+                        et_loginName.setText(name);
+                        et_loginPassword.setText(password);
+                        if (TextUtils.isEmpty(password)) {
+                            isRemind = false;
+                            chk_loginRemind.setChecked(false);
+                        } else {
+                            isRemind = true;
+                            chk_loginRemind.setChecked(true);
+                        }
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onDeleteClicked(int position) {
+                if (Utils.deleteFile(LoginActivity.this, list.get(position).get("file").toString())) {
+                    Log.i("info", "deleteing...");
+                    list = getData();
+                }
+            }
+        });
+        rv.setAdapter(adapter);
+
+        popupWindow.showAsDropDown(et_loginName);
+    }
+
+    public List<Map<String, String>> getData() {
+        list.clear();
+        String jsonArray = Utils.getStoredUsers(this);
+        try {
+            JSONArray ja = new JSONArray(jsonArray);
+            JSONObject jsonObject = null;
+            for (int i = 0; i < ja.length(); i++) {
+                jsonObject = ja.getJSONObject(i);
+                Map<String, String> map = new HashMap<>();
+                map.put("name", jsonObject.getString("name"));
+                map.put("password", jsonObject.getString("password"));
+                map.put("file", jsonObject.getString("file"));
+                list.add(map);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }

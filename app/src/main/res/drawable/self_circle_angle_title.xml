@@ -5,9 +5,9 @@
         android:topRightRadius="10dp" />
     <solid android:color="#ffc" />
     <gradient
-        android:endColor="#baffa200"
+        android:endColor="#fff"
         android:gradientRadius="-45"
-        android:startColor="#b7ff0000" />
+        android:startColor="#fff" />
 
     <stroke
         android:width="0dp"

@@ -4,8 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#62cccccc"
     android:fitsSystemWindows="true"
     tools:context="com.vector.com.card.view.TaskActivity">
+
+    <ImageView
+        android:id="@+id/home_empty"
+        android:layout_width="100dp"
+        android:layout_height="80dp"
+        android:alpha="0.2"
+        android:layout_gravity="center"
+        android:background="@drawable/icon_empty" />
 
     <com.vector.com.card.utils.MyRecyclerViewForTask
         android:id="@+id/task_recyclerView"

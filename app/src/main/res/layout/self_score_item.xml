@@ -8,14 +8,13 @@
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
-        <TextView
+        <ImageView
             android:id="@+id/self_score_item_id"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:gravity="center"
-            android:textSize="20sp" />
+            android:layout_marginLeft="10dp" />
 
         <TextView
             android:id="@+id/self_score_item_content"
@@ -23,7 +22,8 @@
             android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/self_score_item_id"
-            android:gravity="center" />
+            android:gravity="center"
+            android:textColor="@color/blackColor" />
 
         <TextView
             android:id="@+id/self_score_item_score"
@@ -32,6 +32,7 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/self_score_item_content"
             android:gravity="center"
+            android:textColor="@color/blackColor"
             android:textSize="20sp" />
 
         <TextView
@@ -40,6 +41,8 @@
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:gravity="center"/>
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:textColor="@color/blackColor" />
     </RelativeLayout>
 </LinearLayout>

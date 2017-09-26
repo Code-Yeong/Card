@@ -2,10 +2,14 @@ package com.vector.com.card.view;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TextInputEditText;
@@ -13,8 +17,9 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,39 +27,51 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.vector.com.card.R;
 import com.vector.com.card.database.MemoDao;
+import com.vector.com.card.database.NoticeDao;
 import com.vector.com.card.database.ScoreDao;
 import com.vector.com.card.database.SignDao;
 import com.vector.com.card.database.UserDao;
 import com.vector.com.card.domian.Memo;
+import com.vector.com.card.domian.Notice;
 import com.vector.com.card.domian.Score;
 import com.vector.com.card.domian.Sign;
 import com.vector.com.card.domian.User;
+import com.vector.com.card.service.TimeService;
 import com.vector.com.card.utils.LineChart;
 import com.vector.com.card.utils.MyImageView;
-import com.vector.com.card.utils.SignCalendar;
 import com.vector.com.card.utils.Utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
+import java.util.zip.Inflater;
 
-public class HomeActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
-
-    private Toolbar toolbar;
-    private SharedPreferences sharedPreferences;
+public class HomeActivity extends BaseActivity {
+    public static final String action = "action.timeUpdate";
+    private Intent intentService;
+    private MyBroadcastReceiver broadcastReceiver;
+    private IntentFilter filter;
     private LineChart lineChart;
-    private TextView tv_userName, tv_userMark, tv_broadcast;
-    private TextView tv_qiandaozongshu, tv_score, tv_scoreAnimation, tv_tip;
-    private ImageView iv_editMark, iv_qiandao;
-    private MyImageView iv_task, iv_memo;
-    private MyImageView iv_manage;
-    private RelativeLayout relativeLayout;
+    private TextView tv_broadcast;
+    private TextView tv_qiandaozongshu, tv_score, tv_tip;
+    private ImageView iv_setting;
+    private ImageView iv_qiandao, iv_psersonal;
+    private ImageView iv_task, iv_memo, tv_pop, iv_more;
+    private ImageView iv_manage;
+    private LinearLayout ll_notice;
+    private ImageView iv_notice_icon_1, iv_notice_icon_2;
+    private TextView tv_notice_content_1, tv_notice_content_2;
+    private TextView tv_notice_time_1, tv_notice_time_2;
     private long userid;
     private boolean isSigned = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,46 +79,76 @@ public class HomeActivity extends BaseActivity
         addActivity(this);
         setContentView(R.layout.activity_home);
 
-        toolbar = (Toolbar) findViewById(R.id.home_toolbar);
-
+        intentService = new Intent(this, TimeService.class);
+        iv_psersonal = (ImageView) findViewById(R.id.home_personal);
+        iv_setting = (ImageView) findViewById(R.id.home_setting);
+        iv_more = (ImageView) findViewById(R.id.home_chart_title_more);
+        tv_pop = (ImageView) findViewById(R.id.home_pop);
         lineChart = (LineChart) findViewById(R.id.home_lineChart);
-        relativeLayout = (RelativeLayout) findViewById(R.id.home_score_ll);
-        iv_qiandao = (ImageView) findViewById(R.id.home_pic);
-        iv_manage = (MyImageView) findViewById(R.id.home_manage);
-        iv_task = (MyImageView) findViewById(R.id.home_task);
-        iv_memo = (MyImageView) findViewById(R.id.home_memo);
+        tv_score = (TextView) findViewById(R.id.home_score);
+        iv_qiandao = (ImageView) findViewById(R.id.home_sign);
+        iv_manage = (ImageView) findViewById(R.id.home_manage);
+        iv_task = (ImageView) findViewById(R.id.home_task);
+        iv_memo = (ImageView) findViewById(R.id.home_memo);
         tv_broadcast = (TextView) findViewById(R.id.home_broadcast);
         tv_qiandaozongshu = (TextView) findViewById(R.id.home_qiandaozongshu);
         tv_score = (TextView) findViewById(R.id.home_score);
         tv_tip = (TextView) findViewById(R.id.home_tip);
 
-        tv_scoreAnimation = (TextView) findViewById(R.id.home_score_animation);
-        sharedPreferences = getSharedPreferences("userInfo", Activity.MODE_PRIVATE);
-        userid = sharedPreferences.getLong("id", 0);
+        ll_notice = (LinearLayout) findViewById(R.id.home_notice);
+        iv_notice_icon_1 = (ImageView) findViewById(R.id.home_notice_icon_1);
+        iv_notice_icon_2 = (ImageView) findViewById(R.id.home_notice_icon_2);
+        tv_notice_content_1 = (TextView) findViewById(R.id.home_notice_content_1);
+        tv_notice_content_2 = (TextView) findViewById(R.id.home_notice_content_2);
+        tv_notice_time_1 = (TextView) findViewById(R.id.home_notice_time_1);
+        tv_notice_time_2 = (TextView) findViewById(R.id.home_notice_time_2);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        View headerView = navigationView.getHeaderView(0);
-
-        tv_userName = (TextView) headerView.findViewById(R.id.nav_header_home_name);
-        tv_userMark = (TextView) headerView.findViewById(R.id.nav_header_home_mark);
-        iv_editMark = (ImageView) headerView.findViewById(R.id.nav_header_home_edit);
-        iv_editMark.setOnClickListener(new EditMarkListener(this));
-
-        setSupportActionBar(toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-        navigationView.setNavigationItemSelectedListener(this);
+        userid = Utils.getUserId(this);
 
         init();
 
-        relativeLayout.setOnClickListener(new View.OnClickListener() {
+        ll_notice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Utils.vibrate(HomeActivity.this);
-                startActivity(new Intent(HomeActivity.this, ScoreActivity.class));
+                startActivity(new Intent(HomeActivity.this, NoticeActivity.class));
+            }
+        });
+
+        iv_setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.vibrate(HomeActivity.this);
+                startActivity(new Intent(HomeActivity.this, ManageActivity.class));
+            }
+        });
+
+        iv_psersonal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.vibrate(HomeActivity.this);
+                startActivity(new Intent(HomeActivity.this, PersonalActivity.class));
+            }
+        });
+
+        iv_more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.vibrate(HomeActivity.this);
+//                View popup = getLayoutInflater().inflate(R.layout.self_popup_window_chart, null);
+//                PopupWindow popupWindow = new PopupWindow(popup, Utils.dp2pix(HomeActivity.this, 150), Utils.dp2pix(HomeActivity.this, 60));
+//                popupWindow.setOutsideTouchable(true);
+//                popupWindow.setFocusable(true);
+//                popupWindow.showAsDropDown(v, -200, -Utils.dp2pix(HomeActivity.this, 70));
+            }
+        });
+
+        tv_score.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.vibrate(HomeActivity.this);
+//                startActivity(new Intent(HomeActivity.this, ScoreActivity.class));
+                startActivity(new Intent(HomeActivity.this, PlayActivity.class));
             }
         });
 
@@ -135,12 +182,6 @@ public class HomeActivity extends BaseActivity
                 Utils.vibrate(HomeActivity.this);
                 if (!isSigned) {
                     isSigned = true;
-                    tv_scoreAnimation.setVisibility(View.VISIBLE);
-                    Animation translate = AnimationUtils.loadAnimation(v.getContext(), R.anim.from_bottom_to_top);
-                    translate.setFillAfter(true);
-                    tv_scoreAnimation.startAnimation(translate);
-                    tv_scoreAnimation.setVisibility(View.INVISIBLE);
-
                     showSignedInfo(false);
                     setContinueSignedDays();
                 } else {
@@ -148,37 +189,32 @@ public class HomeActivity extends BaseActivity
                 }
             }
         });
+
+        tv_pop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.vibrate(HomeActivity.this);
+                int[] images = {R.drawable.popup01, R.drawable.popup02};
+
+                View popup = getLayoutInflater().inflate(R.layout.self_popup_window, null);
+                ImageView imageView = (ImageView) popup.findViewById(R.id.self_popup_window_image);
+                imageView.setImageResource(images[(int) (new Random().nextInt(images.length))]);
+                Animation animation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.popup_window);
+                popup.setAnimation(animation);
+                //背景图片宽600px(200dp),高900px(300dp),圆角17px
+                PopupWindow popupWindow = new PopupWindow(popup, Utils.dp2pix(HomeActivity.this, 200), Utils.dp2pix(HomeActivity.this, 300));
+                popupWindow.setOutsideTouchable(true);
+                popupWindow.update();
+                popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+                popup.startAnimation(animation);
+
+            }
+        });
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        Utils.vibrate(HomeActivity.this);
-        if (id == R.id.nav_taskManage) {
-            startActivity(new Intent(this, TaskActivity.class));
-        } else if (id == R.id.nav_daily) {
-            startActivity(new Intent(this, DailyActivity.class));
-        } else if (id == R.id.nav_note) {
-            startActivity(new Intent(this, MemoActivity.class));
-        } else if (id == R.id.nav_reLogin) {
-            backToFirst();
-        } else if (id == R.id.nav_exit) {
-            removeAll();
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+        removeAll();
     }
 
     @Override
@@ -188,83 +224,14 @@ public class HomeActivity extends BaseActivity
     }
 
     public void init() {
-        tv_userName.setText(sharedPreferences.getString("name", null));
-        tv_userMark.setText(sharedPreferences.getString("mark", "..."));
         setSignedStatus();
         showSignedInfo(true);
         setContinueSignedDays();
         initTopMarque();
-
-        lineChart.setyMaxValue(10);
-        lineChart.setData(new float[]{1, 4, 3, 4, 6, 3, 1, 10, 9, 0});
-        lineChart.setDataDotColor(Color.RED);
-        lineChart.setLineColor(Color.GREEN);
-        lineChart.setCircleWidth(10);
-        lineChart.setxLines(15);
-        lineChart.setyLines(20);
-        lineChart.setxMaxValue(12);
-        lineChart.setxLabel("月份");
-        lineChart.setyLabel("分数");
-        lineChart.invalidate();
-    }
-
-    private class EditMarkListener implements View.OnClickListener {
-
-        Context context;
-
-        public EditMarkListener(Context cxt) {
-            this.context = cxt;
-        }
-
-        @Override
-        public void onClick(View view) {
-            Utils.vibrate(HomeActivity.this);
-            LayoutInflater inflater = getLayoutInflater();
-            View v = inflater.inflate(R.layout.self_home_edit_mark, null);
-            ImageView iv_close = (ImageView) v.findViewById(R.id.self_home_edit_mark_close);
-            final TextInputEditText et_content = (TextInputEditText) v.findViewById(R.id.self_home_edit_mark_content);
-            Button btn_submit = (Button) v.findViewById(R.id.self_home_edit_mark_submit);
-            final TextView tv_tip = (TextView) v.findViewById(R.id.self_home_edit_mark_tip);
-            final Dialog dialog = new AlertDialog.Builder(context).setView(v).show();
-
-            iv_close.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.vibrate(HomeActivity.this);
-                    dialog.dismiss();
-                }
-            });
-
-            btn_submit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.vibrate(HomeActivity.this);
-                    String content = et_content.getText().toString().trim();
-                    if (content.length() == 0) {
-                        tv_tip.setText("你还未输入任何内容");
-                        tv_tip.setVisibility(View.VISIBLE);
-                    } else {
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.remove("mark");
-                        editor.putString("mark", content);
-                        editor.commit();
-                        tv_userMark.setText(content);
-                        UserDao userDao = new UserDao(context);
-                        User user = (new User(userid, sharedPreferences.getString("name", null)
-                                , sharedPreferences.getString("time", null), sharedPreferences.getString("password", null)
-                                , sharedPreferences.getString("mark", null), sharedPreferences.getString("keepLogin", "0")));
-                        Utils.writeToFile(context.getFilesDir().getPath().toString() + "userInfo.txt", user);
-                        int result = userDao.update(user);
-                        if (result <= 0) {
-                            tv_tip.setText("修改失败，请重试");
-                            tv_tip.setVisibility(View.VISIBLE);
-                        } else {
-                            dialog.dismiss();
-                        }
-                    }
-                }
-            });
-        }
+        initNotice();
+        initDailyChart();
+        registBroadcast();
+        startService();
     }
 
     public void setSignedStatus() {
@@ -281,9 +248,10 @@ public class HomeActivity extends BaseActivity
         if (isSigned && !isIniting) {
             if (signDao.insert(new Sign(String.valueOf(userid))) > 0) {
                 score += 1;
-                scoreDao.insert(new Score(String.valueOf(userid), "签到", "1"));
+                scoreDao.insert(new Score(String.valueOf(userid), "签到", getResources().getString(R.string.score_sign), "S"));
                 userDao.updateScore(new User(userid, String.valueOf(score)));
                 setContinueSignedDays();
+                initDailyChart();
             }
         }
 
@@ -314,4 +282,106 @@ public class HomeActivity extends BaseActivity
             tv_broadcast.setText(str);
         }
     }
+
+    public float[] getDailyData() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
+        ScoreDao scoreDao = new ScoreDao(this);
+        Calendar calendar = Calendar.getInstance();
+        int today = calendar.get(Calendar.DAY_OF_MONTH);
+        String prefix = simpleDateFormat.format(calendar.getTime());
+        float[] datas = new float[today];
+        for (int i = 1; i < today + 1; i++) {
+            datas[i - 1] = scoreDao.queryByUserId(userid, prefix + "-" + ((i < 10) ? ("0" + i) : i));
+        }
+        return datas;
+    }
+
+    public void initDailyChart() {
+        float[] data = getDailyData();
+        float[] data2 = data.clone();
+        lineChart.setData(data);
+        lineChart.setyMaxValue(Utils.getMaxValue(data2) + 3);
+        lineChart.setyLines((int) (Utils.getMaxValue(data2) + 3));
+        lineChart.setDataDotColor(Color.RED);
+        lineChart.setLineColor(Color.LTGRAY);
+        lineChart.setCircleWidth(7);
+        lineChart.setxLines(Utils.getMaxdaysOfThisMonth());
+        lineChart.setxMaxValue(Utils.getMaxdaysOfThisMonth());
+        lineChart.setAxisLabelSize(30);
+        lineChart.setxLabel("日");
+        lineChart.setyLabel("积分值");
+        lineChart.invalidate();
+    }
+
+    public void initNotice() {
+        List<Notice> list = new NoticeDao(this).queryAllByUserId(userid);
+        Notice notice;
+        if (list.size() == 1) {
+            notice = list.get(0);
+            if (notice.getStatus().equals("0")) {
+                iv_notice_icon_1.setVisibility(View.VISIBLE);
+            } else {
+                iv_notice_icon_1.setVisibility(View.GONE);
+            }
+            tv_notice_content_1.setText(notice.getContent());
+            tv_notice_time_1.setText(Utils.getFormatedTime(notice.getTime()));
+        } else if (list.size() >= 2) {
+            notice = list.get(0);
+            if (notice.getStatus().equals("0")) {
+                iv_notice_icon_1.setVisibility(View.VISIBLE);
+            } else {
+                iv_notice_icon_1.setVisibility(View.GONE);
+            }
+            tv_notice_content_1.setText(notice.getContent());
+            tv_notice_time_1.setText(Utils.getFormatedTime(notice.getTime()));
+
+            notice = list.get(1);
+            if (notice.getStatus().equals("0")) {
+                iv_notice_icon_2.setVisibility(View.VISIBLE);
+            } else {
+                iv_notice_icon_2.setVisibility(View.GONE);
+            }
+            tv_notice_content_2.setText(notice.getContent());
+            tv_notice_time_2.setText(Utils.getFormatedTime(notice.getTime()));
+        } else {
+            iv_notice_icon_1.setVisibility(View.GONE);
+            iv_notice_icon_2.setVisibility(View.GONE);
+            tv_notice_content_1.setText("无消息");
+            tv_notice_content_2.setText("无消息");
+        }
+    }
+
+    public void startService() {
+        startService(intentService);
+    }
+
+    public void stopService() {
+        stopService(intentService);
+    }
+
+    public void registBroadcast() {
+        broadcastReceiver = new MyBroadcastReceiver();
+        filter = new IntentFilter(action);
+        this.registerReceiver(broadcastReceiver, filter);
+    }
+
+    public void unRegistBroadcast() {
+        this.unregisterReceiver(broadcastReceiver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopService();
+        unRegistBroadcast();
+        super.onDestroy();
+    }
+
+    public class MyBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            initNotice();
+        }
+    }
 }
+
+

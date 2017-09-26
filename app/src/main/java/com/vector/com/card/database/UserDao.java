@@ -7,11 +7,19 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.MediaPlayer;
 import android.media.audiofx.LoudnessEnhancer;
 import android.util.Log;
 
+import com.vector.com.card.R;
 import com.vector.com.card.domian.User;
+import com.vector.com.card.utils.UserApplication;
 import com.vector.com.card.utils.Utils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Map;
 
 /**
  * Created by Administrator on 2017/8/18.
@@ -34,17 +42,28 @@ public class UserDao implements BaseDao<User> {
         sqLiteDatabase = database.getWritableDatabase();
         contentValues.clear();
         contentValues.put("name", user.getName());
+        contentValues.put("realname", user.getRealName());
         contentValues.put("password", user.getPassword());
         contentValues.put("time", user.getTime());
         contentValues.put("keep_login", user.getKeepLogin());
         contentValues.put("score", user.getScore());
-        return sqLiteDatabase.insert("user", null, contentValues);
+        long id = sqLiteDatabase.insert("user", null, contentValues);
+        ((UserApplication) UserApplication.getInstance()).setUserId(String.valueOf(id));
+        return id;
     }
 
     @Override
     public int delete(long id) {
         sqLiteDatabase = database.getWritableDatabase();
         return sqLiteDatabase.delete("user", "id=?", new String[]{String.valueOf(id)});
+    }
+
+    public int update(long userid, String name, String mark) {
+        sqLiteDatabase = database.getWritableDatabase();
+        contentValues.clear();
+        contentValues.put("realname", name);
+        contentValues.put("mark", mark);
+        return sqLiteDatabase.update("user", contentValues, "id=?", new String[]{String.valueOf(userid)});
     }
 
     @Override
@@ -58,6 +77,7 @@ public class UserDao implements BaseDao<User> {
     }
 
     public int updateScore(User user) {
+        Utils.alarm(cxt, Utils.COIN_ALARM);
         sqLiteDatabase = database.getWritableDatabase();
         contentValues.clear();
         contentValues.put("score", user.getScore());
@@ -67,25 +87,18 @@ public class UserDao implements BaseDao<User> {
     @Override
     public User queryById(long id) {
         sqLiteDatabase = database.getReadableDatabase();
-        Cursor c = sqLiteDatabase.query("user", new String[]{"id", "name", "time", "password", "mark", "score"}, "id=?", new String[]{String.valueOf(id)}, null, null, null);
+        Cursor c = sqLiteDatabase.query("user", new String[]{"id", "name", "realname", "time", "password", "mark", "score"}, "id=?", new String[]{String.valueOf(id)}, null, null, null);
         User user = null;
         if (c.moveToNext()) {
             user = new User(c.getInt(c.getColumnIndex("id")), c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("time"))
-                    , c.getString(c.getColumnIndex("password")), c.getString(c.getColumnIndex("mark")), c.getString(c.getColumnIndex("score")));
+                    , c.getString(c.getColumnIndex("password")), c.getString(c.getColumnIndex("mark")), c.getString(c.getColumnIndex("score")),
+                    c.getString(c.getColumnIndex("realname")), 0);
         }
         c.close();
         return user;
     }
 
-    public boolean setLoginStatus(long id, int status) {
-        sqLiteDatabase = database.getWritableDatabase();
-        contentValues.clear();
-        contentValues.put("keep_login", status);
-        int affectedRow = sqLiteDatabase.update("user", contentValues, "id=?", new String[]{String.valueOf(id)});
-        return affectedRow > 0 ? true : false;
-    }
-
-    public boolean validate(String loginname, String loginPassword, boolean keepLogin, String fileName) {
+    public boolean validate(String loginname, String loginPassword) {
         sqLiteDatabase = database.getReadableDatabase();
         Cursor c = sqLiteDatabase.query("user", new String[]{"id", "name", "time", "password", "mark", "keep_login", "score"}, "name=? and password=?", new String[]{loginname, loginPassword}, null, null, null);
         User user = null;
@@ -93,19 +106,7 @@ public class UserDao implements BaseDao<User> {
             user = new User(c.getInt(c.getColumnIndex("id")), c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("time"))
                     , c.getString(c.getColumnIndex("password")), c.getString(c.getColumnIndex("mark")), c.getString(c.getColumnIndex("keep_login")),
                     c.getString(c.getColumnIndex("score")));
-            if (keepLogin) {
-                Utils.writeToFile(fileName, user);
-            }
-            SharedPreferences sharedPreferences = cxt.getSharedPreferences("userInfo", Activity.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putLong("id", user.getId());
-            editor.putString("name", user.getName());
-            editor.putString("password", user.getPassword());
-            editor.putString("mark", user.getMark());
-            editor.putString("time", user.getTime());
-            editor.putString("keepLogin", user.getKeepLogin());
-            editor.putString("score", user.getScore());
-            editor.commit();
+            ((UserApplication) (UserApplication.getInstance())).setUserId(String.valueOf(user.getId()));
         }
         c.close();
         return user != null ? true : false;
@@ -129,5 +130,4 @@ public class UserDao implements BaseDao<User> {
         c.close();
         return score;
     }
-
 }

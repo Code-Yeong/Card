@@ -9,14 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="60dp">
 
-        <TextView
+        <ImageView
             android:id="@+id/self_daily_id"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:gravity="center"
-            android:textColor="@color/blackColor"
-            android:textSize="25sp" />
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/icon_flag" />
 
         <TextView
             android:id="@+id/self_daily_content"
@@ -30,8 +29,8 @@
 
         <ImageView
             android:id="@+id/self_daily_finished"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"

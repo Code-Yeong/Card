@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.vector.com.card.R;
 import com.vector.com.card.database.MemoDao;
+import com.vector.com.card.database.NoticeDao;
 import com.vector.com.card.domian.Memo;
+import com.vector.com.card.domian.Notice;
 import com.vector.com.card.utils.Utils;
 
 import java.util.List;
@@ -79,6 +81,7 @@ public class RecyclerViewAdapterForMemo extends RecyclerView.Adapter {
             @Override
             public void onClick(View v) {
                 if (delete(id)) {
+                    new NoticeDao(context).insert(new Notice(String.valueOf(Utils.getUserId(context)), "备忘事件删除成功", "C"));
                     list.remove(position);
                     notifyDataSetChanged();
                 }

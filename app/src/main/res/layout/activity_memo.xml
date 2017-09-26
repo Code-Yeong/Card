@@ -4,9 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#70cccccc"
+    android:background="#53cccccc"
     android:fitsSystemWindows="true"
     tools:context=".view.MemoActivity">
+
+    <ImageView
+        android:id="@+id/memo_empty"
+        android:layout_width="100dp"
+        android:layout_height="80dp"
+        android:alpha="0.2"
+        android:layout_gravity="center"
+        android:background="@drawable/icon_empty" />
 
     <com.vector.com.card.utils.MyRecyclerViewForMemo
         android:id="@+id/memo_recycler"
