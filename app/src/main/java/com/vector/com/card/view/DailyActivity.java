@@ -1,25 +1,14 @@
 package com.vector.com.card.view;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.vector.com.card.R;
 import com.vector.com.card.adapter.RecyclerViewAdapterForDaily;
-import com.vector.com.card.database.BaseDao;
-import com.vector.com.card.database.DetailDao;
+import com.vector.com.card.dao.DetailDao;
 import com.vector.com.card.domian.Detail;
 import com.vector.com.card.utils.MyRecyclerViewForDaily;
 import com.vector.com.card.utils.SpaceItemDecoration;

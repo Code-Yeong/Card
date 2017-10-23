@@ -2,6 +2,7 @@ package com.vector.com.card.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,8 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.vector.com.card.R;
-import com.vector.com.card.database.NoticeDao;
-import com.vector.com.card.database.TempDataDaoImpl;
+import com.vector.com.card.dao.NoticeDao;
+import com.vector.com.card.daoimpl.TempDataDaoImpl;
 import com.vector.com.card.domian.Notice;
 import com.vector.com.card.domian.TempData;
 import com.vector.com.card.utils.Utils;
@@ -35,19 +36,6 @@ public class RecyclerViewAdapterForNotice extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         cxt = parent.getContext();
         tempData = Utils.readFromFile(cxt);
-//        if (tempData.getaNotice().equals("no")) {
-//            refreshData("A");
-//        } else if (tempData.getbNotice().equals("no")) {
-//            refreshData("B");
-//        } else if (tempData.getcNotice().equals("no")) {
-//            refreshData("C");
-//        } else if (tempData.geteNotice().equals("no")) {
-//            refreshData("E");
-//        } else if (tempData.getsNotice().equals("no")) {
-//            refreshData("S");
-//        } else if (tempData.getdNotice().equals("no")) {
-//            refreshData("D");
-//        }
         View view = LayoutInflater.from(cxt).inflate(R.layout.self_notice_item, null);
         MyHolder myHolder = new MyHolder(view);
         return myHolder;
@@ -115,30 +103,25 @@ public class RecyclerViewAdapterForNotice extends RecyclerView.Adapter {
                 ll_reject.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Utils.vibrate(cxt);
                         popupWindow.dismiss();
                         TempData t = Utils.readFromFile(cxt);
                         String type = list.get(position).getNtype();
                         if (type.equals("A")) {
                             t.setaNotice("no");
-                            refreshData("A");
                         } else if (type.equals("B")) {
                             t.setbNotice("no");
-                            refreshData("B");
                         } else if (type.equals("C")) {
                             t.setcNotice("no");
-                            refreshData("C");
                         } else if (type.equals("D")) {
                             t.setdNotice("no");
-                            refreshData("D");
                         } else if (type.equals("E")) {
                             t.seteNotice("no");
-                            refreshData("E");
                         } else if (type.equals("S")) {
                             t.setsNotice("no");
-                            refreshData("S");
                         }
+                        refreshData(type);
                         new TempDataDaoImpl().saveLoginInfo(cxt, t);
-                        notifyDataSetChanged();
                     }
                 });
             }
@@ -146,11 +129,11 @@ public class RecyclerViewAdapterForNotice extends RecyclerView.Adapter {
     }
 
     private void refreshData(String type) {
-        for (Notice n : list) {
-            if (n.getNtype().equals(type)) {
-                list.remove(n);
-            }
+        NoticeDao noticeDao = new NoticeDao(cxt);
+        if (noticeDao.deleteAllByType(tempData.getId(), type) > 0) {
+            list = noticeDao.queryAllByUserId(tempData.getId());
         }
+        notifyDataSetChanged();
     }
 
     @Override

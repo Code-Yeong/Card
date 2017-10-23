@@ -1,28 +1,21 @@
 package com.vector.com.card.view;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.graphics.drawable.Drawable;
-import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
 import com.vector.com.card.R;
 import com.vector.com.card.adapter.RecyclerViewAdapterForMemo;
-import com.vector.com.card.database.MemoDao;
-import com.vector.com.card.database.NoticeDao;
+import com.vector.com.card.dao.MemoDao;
+import com.vector.com.card.dao.NoticeDao;
 import com.vector.com.card.domian.Memo;
 import com.vector.com.card.domian.Notice;
 import com.vector.com.card.utils.MyRecyclerViewForMemo;

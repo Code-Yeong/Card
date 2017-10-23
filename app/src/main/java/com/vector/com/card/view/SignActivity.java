@@ -1,16 +1,18 @@
 package com.vector.com.card.view;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.TextView;
 
 import com.vector.com.card.R;
-import com.vector.com.card.database.SignDao;
+import com.vector.com.card.dao.ScoreDao;
+import com.vector.com.card.dao.SignDao;
+import com.vector.com.card.dao.UserDao;
+import com.vector.com.card.domian.Score;
+import com.vector.com.card.domian.Sign;
+import com.vector.com.card.domian.User;
 import com.vector.com.card.utils.SignCalendar;
 import com.vector.com.card.utils.Utils;
 
@@ -21,7 +23,7 @@ import java.util.List;
 public class SignActivity extends BaseActivity {
 
     long userid;
-    private int year,month;
+    private int year, month;
     private SignDao signDao;
     private TextView tv_date, tv_show_date, tv_show_count;
     private SignCalendar signCalendar;
@@ -51,8 +53,44 @@ public class SignActivity extends BaseActivity {
 
         signCalendar.setListener(new SignCalendar.Listener() {
             @Override
-            public void onSelect(View v) {
+            public void onSelect(int selectedDay) {
+                Utils.vibrate(SignActivity.this);
+                SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
+                Calendar c = Calendar.getInstance();
+                c.set(Calendar.DAY_OF_MONTH, selectedDay);
+                final String time = s.format(c.getTime()) + " 00:00:00";
+                new AlertDialog.Builder(SignActivity.this)
+                        .setTitle("提示")
+                        .setMessage("是否补签" + time + "(补签消耗10个积分值)？")
+                        .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Utils.vibrate(SignActivity.this);
+                                dialog.dismiss();
+                                SignDao signDao = new SignDao(SignActivity.this);
+                                UserDao userDao = new UserDao(SignActivity.this);
+                                ScoreDao scoreDao = new ScoreDao(SignActivity.this);
+                                String score_str = userDao.getSignedScore(userid);
+                                int score = Integer.parseInt(score_str);
+                                int loss = Integer.parseInt(getResources().getString(R.string.score_delay_sign));
+                                if (score >= loss && signDao.insert(new Sign(String.valueOf(userid), time), true) > 0) {
+                                    score -= loss;
+                                    scoreDao.insert(new Score(String.valueOf(userid), "补签到", "-" + loss, "S"));
+                                    userDao.updateScore(new User(userid, String.valueOf(score)));
+                                    initCalendar(year, month);
+                                } else {
+                                    Utils.showMsg(getWindow().getDecorView(), "积分余额不足!");
+                                }
 
+                            }
+                        })
+                        .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Utils.vibrate(SignActivity.this);
+                                dialog.dismiss();
+                            }
+                        }).show();
             }
 
             @Override

@@ -1,25 +1,14 @@
-package com.vector.com.card.database;
+package com.vector.com.card.dao;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.media.MediaPlayer;
-import android.media.audiofx.LoudnessEnhancer;
-import android.util.Log;
 
-import com.vector.com.card.R;
+import com.vector.com.card.database.Database;
 import com.vector.com.card.domian.User;
 import com.vector.com.card.utils.UserApplication;
 import com.vector.com.card.utils.Utils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Map;
 
 /**
  * Created by Administrator on 2017/8/18.

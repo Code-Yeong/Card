@@ -1,12 +1,9 @@
 package com.vector.com.card.view;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,10 +21,8 @@ import android.widget.TextView;
 
 import com.vector.com.card.R;
 import com.vector.com.card.adapter.RecyclerViewAdapterForUsers;
-import com.vector.com.card.database.NoticeDao;
-import com.vector.com.card.database.TempDataDaoImpl;
-import com.vector.com.card.database.UserDao;
-import com.vector.com.card.domian.Notice;
+import com.vector.com.card.daoimpl.TempDataDaoImpl;
+import com.vector.com.card.dao.UserDao;
 import com.vector.com.card.domian.TempData;
 import com.vector.com.card.domian.User;
 import com.vector.com.card.utils.UserApplication;

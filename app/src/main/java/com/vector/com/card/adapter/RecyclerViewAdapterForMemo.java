@@ -3,7 +3,6 @@ package com.vector.com.card.adapter;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.vector.com.card.R;
-import com.vector.com.card.database.MemoDao;
-import com.vector.com.card.database.NoticeDao;
+import com.vector.com.card.dao.MemoDao;
+import com.vector.com.card.dao.NoticeDao;
 import com.vector.com.card.domian.Memo;
 import com.vector.com.card.domian.Notice;
 import com.vector.com.card.utils.Utils;

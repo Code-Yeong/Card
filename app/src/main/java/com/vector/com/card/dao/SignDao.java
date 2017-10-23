@@ -1,11 +1,11 @@
-package com.vector.com.card.database;
+package com.vector.com.card.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.vector.com.card.database.Database;
 import com.vector.com.card.domian.Sign;
 import com.vector.com.card.utils.Utils;
 
@@ -30,10 +30,18 @@ public class SignDao implements BaseDao<Sign> {
 
     @Override
     public long insert(Sign sign) {
+        return 0;
+    }
+
+    public long insert(Sign sign, boolean isDelay) {
         sqLiteDatabase = database.getWritableDatabase();
         contentValues.clear();
         contentValues.put("user", sign.getUser());
-        contentValues.put("time", Utils.getCurrentDate());
+        if (!isDelay) {
+            contentValues.put("time", Utils.getCurrentDate());
+        } else {
+            contentValues.put("time", sign.getTime());
+        }
         return sqLiteDatabase.insert("signs", null, contentValues);
     }
 

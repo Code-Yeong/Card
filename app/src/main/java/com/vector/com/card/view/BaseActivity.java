@@ -1,10 +1,12 @@
 package com.vector.com.card.view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 
 import com.vector.com.card.domian.Notice;
 import com.vector.com.card.utils.Utils;
@@ -19,8 +21,15 @@ public class BaseActivity extends AppCompatActivity {
 
     public ImageView iv_empty;
     public Notice notice;
+    private Intent intent;
+    protected PopupWindow basePopup;
+
 
     public static List<Activity> list = new ArrayList<>();
+
+    public BaseActivity() {
+        basePopup = new PopupWindow();
+    }
 
     /**
      * 添加一个新界面
@@ -76,6 +85,16 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        Utils.vibrate(getApplicationContext());
         removeActivity();
+    }
+
+    protected void startNewActivity(Class clazz) {
+        Utils.vibrate(getApplicationContext());
+        if (list.size() < 1) {
+            return;
+        }
+        intent = new Intent(list.get(list.size() - 1), clazz);
+        startActivity(intent);
     }
 }

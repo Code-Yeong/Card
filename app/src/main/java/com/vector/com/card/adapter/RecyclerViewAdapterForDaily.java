@@ -1,10 +1,7 @@
 package com.vector.com.card.adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,19 +11,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.vector.com.card.R;
-import com.vector.com.card.database.DetailDao;
-import com.vector.com.card.database.NoticeDao;
-import com.vector.com.card.database.ScoreDao;
-import com.vector.com.card.database.UserDao;
+import com.vector.com.card.dao.DetailDao;
+import com.vector.com.card.dao.NoticeDao;
+import com.vector.com.card.dao.ScoreDao;
+import com.vector.com.card.dao.UserDao;
 import com.vector.com.card.domian.Detail;
 import com.vector.com.card.domian.Notice;
 import com.vector.com.card.domian.Score;
-import com.vector.com.card.domian.Sign;
-import com.vector.com.card.domian.Task;
 import com.vector.com.card.domian.User;
 import com.vector.com.card.utils.Utils;
-import com.vector.com.card.view.DailyActivity;
-import com.vector.com.card.view.HomeActivity;
 
 import java.util.List;
 

@@ -2,20 +2,13 @@ package com.vector.com.card.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.method.Touch;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.vector.com.card.R;
-import com.vector.com.card.database.TempDataDao;
-import com.vector.com.card.database.TempDataDaoImpl;
+import com.vector.com.card.daoimpl.TempDataDaoImpl;
 import com.vector.com.card.domian.TempData;
 import com.vector.com.card.utils.Utils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class ManageActivity extends BaseActivity {
 

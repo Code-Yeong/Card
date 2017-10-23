@@ -1,13 +1,12 @@
 package com.vector.com.card.view;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.vector.com.card.R;
 import com.vector.com.card.adapter.RecyclerViewAdapterForNotice;
-import com.vector.com.card.database.NoticeDao;
+import com.vector.com.card.dao.NoticeDao;
 import com.vector.com.card.domian.Notice;
 import com.vector.com.card.utils.SpaceItemDecoration;
 import com.vector.com.card.utils.Utils;

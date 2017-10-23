@@ -1,12 +1,11 @@
-package com.vector.com.card.database;
+package com.vector.com.card.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
-import com.vector.com.card.domian.Memo;
+import com.vector.com.card.database.Database;
 import com.vector.com.card.domian.Notice;
 import com.vector.com.card.domian.Score;
 

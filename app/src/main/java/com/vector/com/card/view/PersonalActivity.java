@@ -1,17 +1,10 @@
 package com.vector.com.card.view;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.media.MediaPlayer;
-import android.support.annotation.IntegerRes;
 import android.support.design.widget.TextInputEditText;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.ButtonBarLayout;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -23,17 +16,16 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.vector.com.card.R;
-import com.vector.com.card.database.DetailDao;
-import com.vector.com.card.database.MemoDao;
-import com.vector.com.card.database.NoticeDao;
-import com.vector.com.card.database.ScoreDao;
-import com.vector.com.card.database.SignDao;
-import com.vector.com.card.database.TaskDao;
-import com.vector.com.card.database.UserDao;
+import com.vector.com.card.dao.DetailDao;
+import com.vector.com.card.dao.MemoDao;
+import com.vector.com.card.dao.NoticeDao;
+import com.vector.com.card.dao.ScoreDao;
+import com.vector.com.card.dao.SignDao;
+import com.vector.com.card.dao.TaskDao;
+import com.vector.com.card.dao.UserDao;
 import com.vector.com.card.domian.Detail;
 import com.vector.com.card.domian.Notice;
 import com.vector.com.card.domian.Score;
-import com.vector.com.card.domian.Task;
 import com.vector.com.card.domian.User;
 import com.vector.com.card.utils.Utils;
 
@@ -104,21 +96,21 @@ public class PersonalActivity extends BaseActivity {
         ll_socre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(PersonalActivity.this, ScoreActivity.class));
+                startNewActivity(ScoreActivity.class);
             }
         });
 
         ll_memo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(PersonalActivity.this, MemoActivity.class));
+                startNewActivity(PersonalActivity.class);
             }
         });
 
         ll_task.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(PersonalActivity.this, TaskActivity.class));
+                startNewActivity(TaskActivity.class);
             }
         });
 

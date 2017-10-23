@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -83,6 +84,7 @@ public class LineChart extends View {
 
         //画X、Y轴上的标签
         p.setTextSize(axisLabelSize);
+        p.setTextAlign(Paint.Align.CENTER);
         canvas.drawText(yLabel, margin - 20, margin - 10, p);
         canvas.drawText(xLabel, width - margin + 10, height - margin, p);
 
@@ -91,7 +93,8 @@ public class LineChart extends View {
             canvas.drawLine((i + 1) * xUnit + margin, height - margin, (i + 1) * xUnit + margin, height - margin - 5, p);
             xDots[i + 1] = (i + 1) * xUnit + margin;
             if (i % 2 == 1 && i > 0) {
-                canvas.drawText(String.valueOf((int) ((i + 1) * xMaxValue / xLines)), (i + 1) * xUnit + margin * 3 / 4, height - margin / 3, p);
+                p.setTextAlign(Paint.Align.CENTER);
+                canvas.drawText(String.valueOf((int) ((i + 1) * xMaxValue / xLines)), (i + 1) * xUnit + margin, height - margin / 3, p);
             }
         }
 
@@ -100,26 +103,35 @@ public class LineChart extends View {
             yDots[j + 1] = height - (j + 1) * yUnit - margin;
             canvas.drawLine(margin, height - (j + 1) * yUnit - margin, margin + 5, height - (j + 1) * yUnit - margin, p);
             if ((j + 1) == yLines / 2 || (j + 1) == yLines) {
-                canvas.drawText(String.valueOf((int) (yMaxValue * (j + 1) / yLines)), margin / 3, height - (j + 1) * yUnit - margin * 3 / 4, p);
+                p.setTextAlign(Paint.Align.CENTER);
+                canvas.drawText(String.valueOf((int) (yMaxValue * (j + 1) / yLines)), margin / 3, height - (j + 1) * yUnit - margin, p);
             }
         }
         initCoordinates();
         int m = coordinates.size();
-        int temp = 0;
-        for (int n = 0; n < coordinates.size(); n++) {
-            if (m > 1) {
-                temp = n + 1;
-                if (temp < m) {
-                    Map firstNode = coordinates.get(n);
-                    Map secondNode = coordinates.get(temp);
-                    p.setColor(lineColor);
-                    canvas.drawLine((float) firstNode.get("x"), (float) firstNode.get("y"), (float) secondNode.get("x"), (float) secondNode.get("y"), p);
-                }
-            }
+        Path path = new Path();
+        path.moveTo(margin, height - margin);
+        for (Map map : coordinates) {
+            path.lineTo((float) map.get("x"), (float) map.get("y"));
             //画数据点
             p.setColor(dataDotColor);
-            canvas.drawCircle(coordinates.get(n).get("x"), coordinates.get(n).get("y"), circleWidth, p);
+            p.setStrokeWidth(circleWidth);
+            canvas.drawPoint((float) map.get("x"), (float) map.get("y"), p);
+            p.setTextAlign(Paint.Align.CENTER);
+            p.setColor(dataDotColor);
+            int value = (int) ((float) map.get("value"));
+            if (value > 0) {
+                canvas.drawText(String.valueOf(value), (float) map.get("x"), (float) map.get("y") - 8, p);
+            }
         }
+        if (m > 0) {
+            path.lineTo(coordinates.get(m - 1).get("x"), height - margin);
+        }
+        path.close();
+        p.setColor(lineColor);
+        p.setStyle(Paint.Style.STROKE);
+        p.setStrokeWidth(2);
+        canvas.drawPath(path, p);
         super.onDraw(canvas);
     }
 
@@ -137,6 +149,7 @@ public class LineChart extends View {
             map = new HashMap<>();
             map.put("x", xDots[(k + 1)]);
             map.put("y", (float) (height - margin - (height - 2 * margin) * ((data[k] * 100.0 / yMaxValue) / 100.0)));
+            map.put("value", data[k]);
             coordinates.add(map);
         }
     }

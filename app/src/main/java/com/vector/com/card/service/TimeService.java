@@ -34,7 +34,6 @@ public class TimeService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Intent timeUpdate = new Intent(HomeActivity.action);
         while (true) {
-            timeUpdate.putExtra("time", sdf.format(calendar.getTime()));
             getApplicationContext().sendBroadcast(timeUpdate);
             try {
                 Thread.sleep(60 * 1000);

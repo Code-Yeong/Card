@@ -1,9 +1,11 @@
-package com.vector.com.card.database;
+package com.vector.com.card.daoimpl;
+
+import com.vector.com.card.dao.BaseDao;
 
 /**
- * Created by Administrator on 2017/9/24.
+ * Created by Administrator on 2017/9/28.
  */
-public class BaseDaoImpl<T> implements BaseDao<T> {
+public class SignDaoImpl<T> implements BaseDao<T>{
     @Override
     public long insert(T t) {
         return 0;

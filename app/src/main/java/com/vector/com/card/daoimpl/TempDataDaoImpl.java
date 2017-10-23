@@ -1,11 +1,11 @@
-package com.vector.com.card.database;
+package com.vector.com.card.daoimpl;
 
 import android.content.Context;
 
+import com.vector.com.card.dao.TempDataDao;
 import com.vector.com.card.domian.TempData;
 import com.vector.com.card.utils.Utils;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**

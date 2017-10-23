@@ -1,34 +1,27 @@
 package com.vector.com.card.view;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
-import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.vector.com.card.R;
 import com.vector.com.card.adapter.RecyclerViewAdapterForTask;
-import com.vector.com.card.database.DetailDao;
-import com.vector.com.card.database.NoticeDao;
-import com.vector.com.card.database.TaskDao;
+import com.vector.com.card.dao.DetailDao;
+import com.vector.com.card.dao.NoticeDao;
+import com.vector.com.card.dao.TaskDao;
 import com.vector.com.card.domian.Detail;
 import com.vector.com.card.domian.Notice;
 import com.vector.com.card.domian.Task;

@@ -68,7 +68,17 @@
 
         <service
             android:name=".service.TimeService"
-            android:exported="false"></service>
+            android:exported="false" />
+
+        <receiver android:name=".widget.DeskWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/desk_widget_info" />
+        </receiver>
 
     </application>
 

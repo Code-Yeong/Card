@@ -1,42 +1,31 @@
 package com.vector.com.card.view;
 
-import android.app.Activity;
-import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.TextInputEditText;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.vector.com.card.R;
-import com.vector.com.card.database.MemoDao;
-import com.vector.com.card.database.NoticeDao;
-import com.vector.com.card.database.ScoreDao;
-import com.vector.com.card.database.SignDao;
-import com.vector.com.card.database.UserDao;
+import com.vector.com.card.dao.MemoDao;
+import com.vector.com.card.dao.NoticeDao;
+import com.vector.com.card.dao.ScoreDao;
+import com.vector.com.card.dao.SignDao;
+import com.vector.com.card.dao.UserDao;
 import com.vector.com.card.domian.Memo;
 import com.vector.com.card.domian.Notice;
 import com.vector.com.card.domian.Score;
@@ -44,14 +33,12 @@ import com.vector.com.card.domian.Sign;
 import com.vector.com.card.domian.User;
 import com.vector.com.card.service.TimeService;
 import com.vector.com.card.utils.LineChart;
-import com.vector.com.card.utils.MyImageView;
 import com.vector.com.card.utils.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
-import java.util.zip.Inflater;
 
 public class HomeActivity extends BaseActivity {
     public static final String action = "action.timeUpdate";
@@ -110,24 +97,21 @@ public class HomeActivity extends BaseActivity {
         ll_notice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.vibrate(HomeActivity.this);
-                startActivity(new Intent(HomeActivity.this, NoticeActivity.class));
+                startNewActivity(NoticeActivity.class);
             }
         });
 
         iv_setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.vibrate(HomeActivity.this);
-                startActivity(new Intent(HomeActivity.this, ManageActivity.class));
+                startNewActivity(ManageActivity.class);
             }
         });
 
         iv_psersonal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.vibrate(HomeActivity.this);
-                startActivity(new Intent(HomeActivity.this, PersonalActivity.class));
+                startNewActivity(PersonalActivity.class);
             }
         });
 
@@ -146,46 +130,41 @@ public class HomeActivity extends BaseActivity {
         tv_score.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.vibrate(HomeActivity.this);
-//                startActivity(new Intent(HomeActivity.this, ScoreActivity.class));
-                startActivity(new Intent(HomeActivity.this, PlayActivity.class));
+                startNewActivity(PlayActivity.class);
             }
         });
 
         iv_manage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.vibrate(HomeActivity.this);
-                startActivity(new Intent(HomeActivity.this, TaskActivity.class));
+                startNewActivity(TaskActivity.class);
             }
         });
 
         iv_task.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.vibrate(HomeActivity.this);
-                startActivity(new Intent(HomeActivity.this, DailyActivity.class));
+                startNewActivity(DailyActivity.class);
             }
         });
 
         iv_memo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.vibrate(HomeActivity.this);
-                startActivity(new Intent(HomeActivity.this, MemoActivity.class));
+                startNewActivity(MemoActivity.class);
             }
         });
 
         iv_qiandao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.vibrate(HomeActivity.this);
                 if (!isSigned) {
+                    Utils.vibrate(HomeActivity.this);
                     isSigned = true;
                     showSignedInfo(false);
                     setContinueSignedDays();
                 } else {
-                    startActivity(new Intent(HomeActivity.this, SignActivity.class));
+                    startNewActivity(SignActivity.class);
                 }
             }
         });
@@ -194,7 +173,7 @@ public class HomeActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Utils.vibrate(HomeActivity.this);
-                int[] images = {R.drawable.popup01, R.drawable.popup02};
+                int[] images = {R.drawable.popup01, R.drawable.popup02, R.drawable.popup03};
 
                 View popup = getLayoutInflater().inflate(R.layout.self_popup_window, null);
                 ImageView imageView = (ImageView) popup.findViewById(R.id.self_popup_window_image);
@@ -246,7 +225,7 @@ public class HomeActivity extends BaseActivity {
         int score = Integer.parseInt(score_str);
 
         if (isSigned && !isIniting) {
-            if (signDao.insert(new Sign(String.valueOf(userid))) > 0) {
+            if (signDao.insert(new Sign(String.valueOf(userid)), false) > 0) {
                 score += 1;
                 scoreDao.insert(new Score(String.valueOf(userid), "签到", getResources().getString(R.string.score_sign), "S"));
                 userDao.updateScore(new User(userid, String.valueOf(score)));
@@ -310,6 +289,8 @@ public class HomeActivity extends BaseActivity {
         lineChart.setAxisLabelSize(30);
         lineChart.setxLabel("日");
         lineChart.setyLabel("积分值");
+        lineChart.setxWidth(2);
+        lineChart.setyWidth(2);
         lineChart.invalidate();
     }
 
@@ -352,6 +333,7 @@ public class HomeActivity extends BaseActivity {
     }
 
     public void startService() {
+        stopService();
         startService(intentService);
     }
 
@@ -360,7 +342,9 @@ public class HomeActivity extends BaseActivity {
     }
 
     public void registBroadcast() {
-        broadcastReceiver = new MyBroadcastReceiver();
+        if (broadcastReceiver == null) {
+            broadcastReceiver = new MyBroadcastReceiver();
+        }
         filter = new IntentFilter(action);
         this.registerReceiver(broadcastReceiver, filter);
     }
@@ -379,9 +363,11 @@ public class HomeActivity extends BaseActivity {
     public class MyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            sendBroadcast(new Intent("android.appwidget.action.APPWIDGET_UPDATE"));
             initNotice();
         }
     }
+
 }
 
 

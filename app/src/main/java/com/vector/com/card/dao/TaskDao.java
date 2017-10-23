@@ -1,4 +1,4 @@
-package com.vector.com.card.database;
+package com.vector.com.card.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.vector.com.card.database.Database;
 import com.vector.com.card.domian.Task;
 
 import java.util.ArrayList;

@@ -1,20 +1,15 @@
 package com.vector.com.card.view;
 
-import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.vector.com.card.R;
 import com.vector.com.card.adapter.RecyclerViewAdapterForScore;
-import com.vector.com.card.database.ScoreDao;
-import com.vector.com.card.domian.Memo;
+import com.vector.com.card.dao.ScoreDao;
 import com.vector.com.card.domian.Score;
 import com.vector.com.card.utils.Utils;
 

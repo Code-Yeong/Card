@@ -22,4 +22,7 @@
     <string name="score_daily">1</string>
     <string name="score_bonus_sign">1</string>
     <string name="score_bonus_task">3</string>
+    <string name="score_delay_sign">10</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>

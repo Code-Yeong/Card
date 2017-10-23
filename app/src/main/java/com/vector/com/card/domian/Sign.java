@@ -12,6 +12,11 @@ public class Sign {
         this.user = user;
     }
 
+    public Sign(String user, String time) {
+        this.user = user;
+        this.time = time;
+    }
+
     public Sign(long id, String user, String time) {
         this.id = id;
         this.user = user;

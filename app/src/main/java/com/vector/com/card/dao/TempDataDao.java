@@ -1,4 +1,4 @@
-package com.vector.com.card.database;
+package com.vector.com.card.dao;
 
 import android.content.Context;
 

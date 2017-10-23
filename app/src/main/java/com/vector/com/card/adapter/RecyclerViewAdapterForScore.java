@@ -49,6 +49,9 @@ public class RecyclerViewAdapterForScore extends RecyclerView.Adapter {
         } else {
             h.iv_id.setImageResource(R.drawable.icon_in);
             h.tv_score.setText(String.valueOf("+" + score));
+            h.tv_content.setTextColor(Color.BLACK);
+            h.tv_time.setTextColor(Color.BLACK);
+            h.tv_score.setTextColor(Color.GREEN);
         }
     }
 

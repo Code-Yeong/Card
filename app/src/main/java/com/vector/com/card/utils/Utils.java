@@ -5,31 +5,23 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.Vibrator;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 
 import com.vector.com.card.R;
 import com.vector.com.card.domian.TempData;
-import com.vector.com.card.domian.User;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.text.ParseException;
@@ -169,7 +161,6 @@ public class Utils {
             BufferedReader br;
             for (File ff : fs) {
                 if (ff.getName().matches("^[0-9]{1,8}.dat$")) {
-                    Log.i("info", "Filename:" + ff.getName());
                     fileInputStream = new FileInputStream(ff);
                     inputStreamReader = new InputStreamReader(fileInputStream);
                     br = new BufferedReader(inputStreamReader);
@@ -244,7 +235,6 @@ public class Utils {
             calendar.setTime(sdf.parse(time));
             long pastTime = calendar.getTimeInMillis();
             long loss = currentTime - pastTime;
-//            Log.i("info", "c:" + currentTime + "--p:" + pastTime + "--l:" + loss);
             if (loss < oneMinute) {
                 result = "刚刚";
             } else if (loss < oneHour) {
